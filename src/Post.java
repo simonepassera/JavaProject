@@ -1,5 +1,5 @@
 import java.sql.Timestamp;
-import java.util.Set;
+import java.util.List;
 
 public interface Post {
     /*
@@ -38,6 +38,6 @@ public interface Post {
 
 
     // Restituisce l' insieme degli utenti a cui piace il post
-    Set<String> getHearts();
+    List<String> getHearts();
     // @EFFECTS : Restituisce hearts contenuto in <id, author, text, timestamp, hearts>
 }
