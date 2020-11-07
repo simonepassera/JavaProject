@@ -13,9 +13,9 @@ public interface Post {
                    timestamp -> data e ora di invio del post
                    hearts ->    insieme di followers appartenenti alla rete sociale che hanno espresso
                                 un apprezzamento positivo al post (equivalente ad un Like)
+
         Typical element : <id, author, text, timestamp, hearts>
      */
-
 
     // Restituisce l' identificatore univoco del post
     Integer getId();

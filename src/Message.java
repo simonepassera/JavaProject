@@ -2,7 +2,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tweet implements Post{
+public class Message implements Post{
     /*
         Representation Invariant : id != null && author != null && text != null && timestamp != null && hearts != null
                                    && author.length() != 0 && 0 < text.length() <= 140 &&
@@ -25,8 +25,8 @@ public class Tweet implements Post{
     private Timestamp timestamp;
     private List<String> hearts;
 
-    // Crea un tweet
-    public Tweet(Integer id, String author, String text, Timestamp timestamp, List<String> hearts){
+    // Crea un messaggio
+    public Message(Integer id, String author, String text, Timestamp timestamp, List<String> hearts){
         if(id == null || author == null || text == null || timestamp == null || hearts == null)
         {
             throw new NullPointerException();
