@@ -14,30 +14,27 @@ public interface Post {
                    hearts ->    insieme di followers appartenenti alla rete sociale che hanno espresso
                                 un apprezzamento positivo al post (equivalente ad un Like)
 
-        Typical element : <id, author, text, timestamp, hearts>
+        Typical element : <ID, AUTHOR, TEXT, TIMESTAMP, HEARTS>
+
      */
 
     // Restituisce l' identificatore univoco del post
     Integer getId();
-    // @EFFECTS : Restituisce l' id contenuto in <id, author, text, timestamp, hearts>
-
+    // @RETURN : ID
 
     // Restituisce il nome utente dell' autore del post
     String getAuthor();
-    // @EFFECTS : Restituisce author contenuto in <id, author, text, timestamp, hearts>
-
+    // @RETURN : AUTHOR
 
     // Restituisce il corpo del messaggio contenuto nel post
     String getText();
-    // @EFFECTS : Restituisce text contenuto in <id, author, text, timestamp, hearts>
-
+    // @RETURN : TEXT
 
     // Restituisce data e ora di invio del post
     Timestamp getTimestamp();
-    // @EFFECTS : Restituisce timestamp contenuto in <id, author, text, timestamp, hearts>
-
+    // @RETURN : TIMESTAMP
 
     // Restituisce l' insieme degli utenti a cui piace il post
     List<String> getHearts();
-    // @EFFECTS : Restituisce hearts contenuto in <id, author, text, timestamp, hearts>
+    // @RETURN : HEARTS
 }

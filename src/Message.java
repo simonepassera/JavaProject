@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Message implements Post{
     /*
-        Representation Invariant : id != null && author != null && text != null && timestamp != null && hearts != null
+        Representation Invariant : author != null && text != null && timestamp != null && hearts != null
                                    && author.length() != 0 && 0 < text.length() <= 140 &&
                                    for all i : 0 <= i < hearts.size() ==> (hearts.get(i) != null)
                                    && for all i != j : 0 <= i, j < hearts.size() ==> (hearts.get(i) != hearts.get(j))
@@ -19,15 +19,17 @@ public class Message implements Post{
                                              un apprezzamento positivo al post (equivalente ad un Like)
      */
 
-    private Integer id;
+    static int id_generator=0;
+
+    private int id;
     private String author;
     private String text;
     private Timestamp timestamp;
     private List<String> hearts;
 
     // Crea un messaggio
-    public Message(Integer id, String author, String text, Timestamp timestamp, List<String> hearts){
-        if(id == null || author == null || text == null || timestamp == null || hearts == null)
+    public Message(String author, String text, Timestamp timestamp, List<String> hearts){
+        if(author == null || text == null || timestamp == null || hearts == null)
         {
             throw new NullPointerException();
         }
@@ -46,7 +48,7 @@ public class Message implements Post{
         }
 
         this.hearts = h;
-        this.id = id;
+        this.id = ++id_generator;
         this.author = author;
         this.text = text;
         this.timestamp = (Timestamp) timestamp.clone();
@@ -62,29 +64,29 @@ public class Message implements Post{
     public Integer getId(){
         return id;
     }
-    // @EFFECTS : Restituisce l' id contenuto in <id, author, text, timestamp, hearts>
+    // @RETURN : id
 
     // Restituisce il nome utente dell' autore del post
     public String getAuthor(){
         return author;
     }
-    // @EFFECTS : Restituisce author contenuto in <id, author, text, timestamp, hearts>
+    // @RETURN : author
 
     // Restituisce il corpo del messaggio contenuto nel post
     public String getText(){
         return text;
     }
-    // @EFFECTS : Restituisce text contenuto in <id, author, text, timestamp, hearts>
+    // @RETURN : text
 
     // Restituisce data e ora di invio del post
     public Timestamp getTimestamp(){
         return timestamp;
     }
-    // @EFFECTS : Restituisce timestamp contenuto in <id, author, text, timestamp, hearts>
+    // @RETURN : timestamp
 
     // Restituisce l' insieme degli utenti a cui piace il post
     public List<String> getHearts(){
         return new ArrayList<String>(hearts);
     }
-    // @EFFECTS : Restituisce hearts contenuto in <id, author, text, timestamp, hearts>
+    // @RETURN : hearts
 }
