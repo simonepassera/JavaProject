@@ -9,8 +9,7 @@ public interface SocialNetwork {
                    di utenti. Un utente può mettere un cuore ad un post se e solo se segue
                    il creatore del post.
 
-        Typical element : <USERS, FOLLOWERS, POSTS>
-
+        Typical element : <USERS, FOLLOWERS, POSTS, HEARTS>
      */
 
     // Crea un nuovo utente e l' insieme delle persone da lui seguite nella rete sociale,

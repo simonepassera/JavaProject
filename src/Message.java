@@ -1,13 +1,9 @@
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Message implements Post{
     /*
-        Representation Invariant : author != null && text != null && timestamp != null && hearts != null
-                                   && author.length() != 0 && 0 < text.length() <= 140 &&
-                                   for all i : 0 <= i < hearts.size() ==> (hearts.get(i) != null)
-                                   && for all i != j : 0 <= i, j < hearts.size() ==> (hearts.get(i) != hearts.get(j))
+        Representation Invariant : author != null && text != null && timestamp != null
+                                   && author.length() != 0 && 0 < text.length() <= 140
 
         Abstraction function :  AF(id) = identificatore univoco del post
                                 AF(author) = utente univoco della rete sociale che ha scritto il post
@@ -15,49 +11,37 @@ public class Message implements Post{
                                            altri utenti appartenenti alla rete sociale con l' uso del simbolo (@)
                                            ad es @Nome1 @Nome2 ...
                                 AF(timestamp) = data e ora di invio del post
-                                AF(hearts) = insieme di followers appartenenti alla rete sociale che hanno espresso
-                                             un apprezzamento positivo al post (equivalente ad un Like)
      */
 
-    static int id_generator=0;
+    static int id_generator = 0;
 
     private int id;
     private String author;
     private String text;
     private Timestamp timestamp;
-    private List<String> hearts;
 
     // Crea un messaggio
-    public Message(String author, String text, Timestamp timestamp, List<String> hearts){
-        if(author == null || text == null || timestamp == null || hearts == null)
+    public Message(String author, String text, Timestamp timestamp){
+        if(author == null || text == null || timestamp == null)
         {
             throw new NullPointerException();
         }
 
-        if(author.length() == 0 || text.length() == 0 || text.length() > 140 || hearts.contains(null))
+        if(author.length() == 0 || text.length() == 0 || text.length() > 140)
         {
             throw new IllegalArgumentException();
         }
 
-        List<String> h = new ArrayList<String>();
-
-        for(String s : hearts)
-        {
-            if(h.contains(s)) throw new IllegalArgumentException();
-            h.add(s);
-        }
-
-        this.hearts = h;
         this.id = ++id_generator;
         this.author = author;
         this.text = text;
         this.timestamp = (Timestamp) timestamp.clone();
     }
     /*
-       @REQUIRES : id != null && author != null && text != null && timestamp != null && hearts != null
+       @REQUIRES : id != null && author != null && text != null && timestamp != null
        @THROWS : NullPointerException, IllegalArgumentException
-       @MODIFIES : id, author, text, hearts
-       @EFFECTS :  Inizializza id, author, text, hearts con i rispettivi parametri
+       @MODIFIES : id, author, text
+       @EFFECTS :  Inizializza id, author, text con i rispettivi parametri
      */
 
     // Restituisce l' identificatore univoco del post
@@ -83,10 +67,4 @@ public class Message implements Post{
         return timestamp;
     }
     // @RETURN : timestamp
-
-    // Restituisce l' insieme degli utenti a cui piace il post
-    public List<String> getHearts(){
-        return new ArrayList<String>(hearts);
-    }
-    // @RETURN : hearts
 }

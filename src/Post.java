@@ -1,5 +1,4 @@
 import java.sql.Timestamp;
-import java.util.List;
 
 public interface Post {
     /*
@@ -11,11 +10,8 @@ public interface Post {
                                 altri utenti appartenenti alla rete sociale con l' uso del simbolo (@)
                                 ad es @Nome1 @Nome2 ...
                    timestamp -> data e ora di invio del post
-                   hearts ->    insieme di followers appartenenti alla rete sociale che hanno espresso
-                                un apprezzamento positivo al post (equivalente ad un Like)
 
-        Typical element : <ID, AUTHOR, TEXT, TIMESTAMP, HEARTS>
-
+        Typical element : <ID, AUTHOR, TEXT, TIMESTAMP>
      */
 
     // Restituisce l' identificatore univoco del post
@@ -33,8 +29,4 @@ public interface Post {
     // Restituisce data e ora di invio del post
     Timestamp getTimestamp();
     // @RETURN : TIMESTAMP
-
-    // Restituisce l' insieme degli utenti a cui piace il post
-    List<String> getHearts();
-    // @RETURN : HEARTS
 }
