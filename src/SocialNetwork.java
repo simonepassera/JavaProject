@@ -9,18 +9,19 @@ public interface SocialNetwork {
                    di utenti. Un utente può mettere un cuore ad un post se e solo se segue
                    il creatore del post.
 
-        Typical element : <USERS, FOLLOWERS, POSTS, HEARTS>
+        Typical element : <USERS, POSTS>
      */
 
     // Crea un nuovo utente e l' insieme delle persone da lui seguite nella rete sociale,
     // restituisce il proprio username
-    String addUser(String username, Set<String> following);
+    String addUser(String username, List<String> following);
     /*
        @REQUIRES : username != null && following != null &&
                    USERS.contains(username) == false && USERS.containsAll(following) == true
+                   && for all i != j : 0 <= i, j < following.size() ==> (following.get(i) != following.get(j))
        @THROWS : NullPointerException, IllegalArgumentException
        @MODIFIES :  USERS
-       @EFFECTS : <USERS>_post = <USERS>_pre U <username>
+       @EFFECTS : <USERS>_post = <USERS>_pre U <username, following>
        @RETURN : username
      */
 
@@ -44,7 +45,7 @@ public interface SocialNetwork {
      */
 
     // Aggiunge ad username un insieme di followers
-    void addFollower(String username, Set<String> followers);
+    void addFollower(String username, List<String> followers);
     /*
        @REQUIRES :
        @THROWS :
@@ -62,7 +63,7 @@ public interface SocialNetwork {
      */
 
     // Aggiunge un insieme di post creati da username
-    void addPost(String username, Set<Post> post);
+    void addPost(String username, List<Post> post);
     /*
        @REQUIRES :
        @THROWS :
@@ -81,7 +82,7 @@ public interface SocialNetwork {
 
     // Inserisce nell' insieme dei post identificati univocamente da id
     // un cuore appartenente ad username
-    void addHeart(String username, Set<Integer> id);
+    void addHeart(String username, List<Integer> id);
     /*
        @REQUIRES :
        @THROWS :
