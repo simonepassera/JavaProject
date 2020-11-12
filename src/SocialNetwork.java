@@ -10,6 +10,8 @@ public interface SocialNetwork {
                    il creatore del post.
 
         Typical element : <USERS, POSTS>
+                          USERS insieme di coppie <utenti, insieme delle persone da lui seguite>
+                          POSTS è l' insieme di post nella rete sociale
      */
 
     // Crea un nuovo utente e l' insieme delle persone da lui seguite nella rete sociale,
@@ -31,26 +33,28 @@ public interface SocialNetwork {
        @REQUIRES : username != null && USERS.contains(username) == false
        @THROWS : NullPointerException, IllegalArgumentException
        @MODIFIES : USERS
-       @EFFECTS : <USERS>_post = <USERS>_pre U <username>
+       @EFFECTS : <USERS>_post = <USERS>_pre U <username, () >
        @RETURN : username
      */
 
     // Aggiunge ad username un follower
     void addFollower(String username, String follower);
     /*
-       @REQUIRES :
-       @THROWS :
-       @MODIFIES :
-       @EFFECTS :
+       @REQUIRES : username != null && follower != null && USERS.contains(follower) == true
+                   && USERS.contains(username) == true
+       @THROWS : NullPointerException, IllegalArgumentException
+       @MODIFIES : USERS
+       @EFFECTS : <USERS>_post = <USERS>_pre U <follower, username>
      */
 
     // Aggiunge ad username un insieme di followers
     void addFollower(String username, List<String> followers);
     /*
-       @REQUIRES :
-       @THROWS :
-       @MODIFIES :
-       @EFFECTS :
+       @REQUIRES : username != null && followers != null && USERS.contains(username) == true
+                   && USERS.containsAll(followers) == true && for all i != j : 0 <= i, j < followers.size() ==> (followers.get(i) != followers.get(j))
+       @THROWS : NullPointerException, IllegalArgumentException
+       @MODIFIES : USERS
+       @EFFECTS : <USERS>_post = <USERS>_pre U [ for all i : 0 <= i < followers.size() ==> <followers.get(i), username> ]
      */
 
     // Aggiunge un post creato da username

@@ -1,7 +1,4 @@
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class MicroBlog implements SocialNetwork {
     /*
@@ -14,7 +11,7 @@ public class MicroBlog implements SocialNetwork {
                                              un apprezzamento positivo al post (equivalente ad un Like)
      */
 
-    Map<String, Set<String>> users;
+    Map<String, Set<String>> users = new HashMap<String, Set<String>>();
 
     // Crea un nuovo utente e l' insieme delle persone da lui seguite nella rete sociale,
     // restituisce il proprio username
@@ -31,8 +28,7 @@ public class MicroBlog implements SocialNetwork {
 
         for(String s : following)
         {
-            if(set_following.contains(s)) throw new IllegalArgumentException();
-            set_following.add(s);
+            if(!set_following.add(s)) throw new IllegalArgumentException();
         }
 
         users.put(username, set_following);
@@ -67,13 +63,59 @@ public class MicroBlog implements SocialNetwork {
        @RETURN : username
      */
 
+    // Aggiunge ad username un follower
     public void addFollower(String username, String follower) {
+        if(username == null || follower == null) throw new NullPointerException();
+        if(!users.containsKey(follower) || !users.containsKey(username)) throw new IllegalArgumentException();
 
+        Set<String> set_following;
+
+        if(users.get(follower) == null)
+        {
+            set_following = new HashSet<String>();
+        }
+        else
+        {
+            set_following = users.get(follower);
+        }
+
+        set_following.add(username);
+        users.put(follower, set_following);
     }
+    /*
+       @REQUIRES : username != null && follower != null && users.containsKey(follower) == true
+                   && users.containsKey(username) == true
+       @THROWS : NullPointerException, IllegalArgumentException
+       @MODIFIES : users
+       @EFFECTS : users.put(follower, username)
+     */
 
+
+    // Aggiunge ad username un insieme di followers
     public void addFollower(String username, List<String> followers) {
+        if(username == null || followers == null) throw new NullPointerException();
+        if(!users.containsKey(username)) throw new IllegalArgumentException();
 
+        Set<String> set_followers = new HashSet<String>();
+
+        for(String s : followers)
+        {
+            if(!set_followers.add(s)) throw new IllegalArgumentException();
+        }
+
+        for(String s : set_followers)
+        {
+            addFollower(s, username);
+        }
     }
+    /*
+       @REQUIRES : username != null && followers != null && users.containsKey(username) == true
+                   && for all i : 0 <= i < followers.size() ==> users.containsKey(followers.get(i)) == true
+                   && for all i != j : 0 <= i, j < followers.size() ==> (followers.get(i) != followers.get(j))
+       @THROWS : NullPointerException, IllegalArgumentException
+       @MODIFIES : users
+       @EFFECTS : for all i : 0 <= i < followers.size() ==> users.put(followers.get(i), username)
+     */
 
     public void addPost(String username, Post post) {
 
