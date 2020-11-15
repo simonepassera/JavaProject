@@ -2,16 +2,13 @@ import java.util.*;
 
 public class MicroBlog implements SocialNetwork {
     /*
-        Representation Invariant :
+        Representation Invariant : users != null && for all keys of users ==> (users.get(key).contains(key) == false)
+                                   &&
 
-        for all i : 0 <= i < hearts.size() ==> (hearts.get(i) != null)
-        && for all i != j : 0 <= i, j < hearts.size() ==> (hearts.get(i) != hearts.get(j))
-
-        Abstraction function :  AF(hearts) = insieme di followers appartenenti alla rete sociale che hanno espresso
-                                             un apprezzamento positivo al post (equivalente ad un Like)
+        Abstraction function : AF(users) = Insieme di coppie <utente, insieme delle persone da lui seguite>
      */
 
-    Map<String, Set<String>> users = new HashMap<String, Set<String>>();
+    Map<String, Set<String>> users;
 
     // Crea un nuovo utente e l' insieme delle persone da lui seguite nella rete sociale,
     // restituisce il proprio username
@@ -53,7 +50,6 @@ public class MicroBlog implements SocialNetwork {
         users.put(username, null);
 
         return username;
-
     }
     /*
        @REQUIRES : username != null && users.containsKey(username) == false
@@ -66,7 +62,7 @@ public class MicroBlog implements SocialNetwork {
     // Aggiunge ad username un follower
     public void addFollower(String username, String follower) {
         if(username == null || follower == null) throw new NullPointerException();
-        if(!users.containsKey(follower) || !users.containsKey(username)) throw new IllegalArgumentException();
+        if(username.equals(follower) || !users.containsKey(follower) || !users.containsKey(username)) throw new IllegalArgumentException();
 
         Set<String> set_following;
 
@@ -83,8 +79,8 @@ public class MicroBlog implements SocialNetwork {
         users.put(follower, set_following);
     }
     /*
-       @REQUIRES : username != null && follower != null && users.containsKey(follower) == true
-                   && users.containsKey(username) == true
+       @REQUIRES : username != null && follower != null && username.equals(follower) == false
+                   && users.containsKey(follower) == true && users.containsKey(username) == true
        @THROWS : NullPointerException, IllegalArgumentException
        @MODIFIES : users
        @EFFECTS : users.put(follower, username)
@@ -100,7 +96,7 @@ public class MicroBlog implements SocialNetwork {
 
         for(String s : followers)
         {
-            if(!set_followers.add(s)) throw new IllegalArgumentException();
+            if(!set_followers.add(s) || username.equals(s)) throw new IllegalArgumentException();
         }
 
         for(String s : set_followers)
@@ -110,7 +106,7 @@ public class MicroBlog implements SocialNetwork {
     }
     /*
        @REQUIRES : username != null && followers != null && users.containsKey(username) == true
-                   && for all i : 0 <= i < followers.size() ==> users.containsKey(followers.get(i)) == true
+                   && for all i : 0 <= i < followers.size() ==> (users.containsKey(followers.get(i)) == true && username.equals(followers.get(i) == false)
                    && for all i != j : 0 <= i, j < followers.size() ==> (followers.get(i) != followers.get(j))
        @THROWS : NullPointerException, IllegalArgumentException
        @MODIFIES : users
@@ -122,14 +118,6 @@ public class MicroBlog implements SocialNetwork {
     }
 
     public void addPost(String username, List<Post> post) {
-
-    }
-
-    public void addHeart(String username, Integer id) {
-
-    }
-
-    public void addHeart(String username, List<Integer> id) {
 
     }
 

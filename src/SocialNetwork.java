@@ -6,11 +6,11 @@ public interface SocialNetwork {
                    la rete sociale MicroBlog. Una persona nella rete sociale è rappresentata e
                    identificata in modo univoco dal nome. Gli utenti della rete sociale
                    non possono seguire se stessi ed ognuno può seguire un numero indefinito
-                   di utenti. Un utente può mettere un cuore ad un post se e solo se segue
-                   il creatore del post.
+                   di utenti. Un utente può mettere un mi piace ad un post, scrivendo nel campo testo
+                   #LIKE_id dove id è l' identificatore univoco del post, solamente se segue il creatore del post.
 
         Typical element : <USERS, POSTS>
-                          USERS insieme di coppie <utenti, insieme delle persone da lui seguite>
+                          USERS insieme di coppie <utente, insieme delle persone da lui seguite>
                           POSTS è l' insieme di post nella rete sociale
      */
 
@@ -40,8 +40,8 @@ public interface SocialNetwork {
     // Aggiunge ad username un follower
     void addFollower(String username, String follower);
     /*
-       @REQUIRES : username != null && follower != null && USERS.contains(follower) == true
-                   && USERS.contains(username) == true
+       @REQUIRES : username != null && follower != null && username.equals(follower) == false
+                   && USERS.contains(follower) == true && USERS.contains(username) == true
        @THROWS : NullPointerException, IllegalArgumentException
        @MODIFIES : USERS
        @EFFECTS : <USERS>_post = <USERS>_pre U <follower, username>
@@ -52,6 +52,7 @@ public interface SocialNetwork {
     /*
        @REQUIRES : username != null && followers != null && USERS.contains(username) == true
                    && USERS.containsAll(followers) == true && for all i != j : 0 <= i, j < followers.size() ==> (followers.get(i) != followers.get(j))
+                   && for all i : 0 <= i < followers.size() ==> (username.equals(followers.get(i)))
        @THROWS : NullPointerException, IllegalArgumentException
        @MODIFIES : USERS
        @EFFECTS : <USERS>_post = <USERS>_pre U [ for all i : 0 <= i < followers.size() ==> <followers.get(i), username> ]
@@ -68,25 +69,6 @@ public interface SocialNetwork {
 
     // Aggiunge un insieme di post creati da username
     void addPost(String username, List<Post> post);
-    /*
-       @REQUIRES :
-       @THROWS :
-       @MODIFIES :
-       @EFFECTS :
-     */
-
-    // Inserisce nel post identificato univocamente da id un cuore appartenente ad username
-    void addHeart(String username, Integer id);
-    /*
-       @REQUIRES :
-       @THROWS :
-       @MODIFIES :
-       @EFFECTS :
-     */
-
-    // Inserisce nell' insieme dei post identificati univocamente da id
-    // un cuore appartenente ad username
-    void addHeart(String username, List<Integer> id);
     /*
        @REQUIRES :
        @THROWS :
