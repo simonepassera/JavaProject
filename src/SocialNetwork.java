@@ -6,8 +6,8 @@ public interface SocialNetwork {
                    la rete sociale MicroBlog. Una persona nella rete sociale è rappresentata e
                    identificata in modo univoco dal nome. Gli utenti della rete sociale
                    non possono seguire se stessi ed ognuno può seguire un numero indefinito
-                   di utenti. Un utente può mettere un mi piace ad un post, scrivendo nel campo testo
-                   #LIKE_id dove id è l' identificatore univoco del post, solamente se segue il creatore del post.
+                   di utenti. Un utente può mettere un mi piace ad un post oppure menzionare un utente, solo se
+                   segue il creatore del post o l' utente menzionato.
 
         Typical element : <USERS, POSTS>
                           USERS insieme di coppie <utente, insieme delle persone da lui seguite>
@@ -63,6 +63,7 @@ public interface SocialNetwork {
     /*
        @REQUIRES : username != null && post != null && USERS.contains(username) == true
                    && username.equals(post.getAuthor()) == true && post.getTimestamp().compareTo(currentTime) <= 0
+                   && post.getText().
        @THROWS : NullPointerException, IllegalArgumentException
        @MODIFIES : POSTS
        @EFFECTS : <POSTS>_post = <POSTS>_pre U post
@@ -72,20 +73,13 @@ public interface SocialNetwork {
     void addPost(String username, List<Post> posts);
     /*
        @REQUIRES : username != null && posts != null && USERS.contains(username) == true
+                   && for all i != j : 0 <= i, j < posts.size() ==> (posts.get(i) != posts.get(j))
                    && for all i : 0 <= i < posts.size() ==> (username.equals(posts.get(i).getAuthor()) == true)
                    && for all i : 0 <= i < posts.size() ==> (posts.get(i).getTimestamp().compareTo(currentTime) <= 0)
+                   &&
        @THROWS : NullPointerException, IllegalArgumentException
        @MODIFIES : POSTS
        @EFFECTS : <POSTS>_post = <POSTS>_pre U [ for all i : 0 <= i < posts.size() ==> posts.get(i) ]
-     */
-
-    // Restituisce la rete sociale derivata dalla lista di post
-    Map<String, Set<String>> guessFollowers(List<Post> ps);
-    /*
-       @REQUIRES :
-       @THROWS :
-       @MODIFIES :
-       @EFFECTS :
      */
 
     // Restituisce gli utenti più influenti delle rete sociale, ovvero quelli che hanno
@@ -107,28 +101,9 @@ public interface SocialNetwork {
        @EFFECTS :
      */
 
-    // Restituisce l’insieme degli utenti menzionati (inclusi) nella lista di post
-    Set<String> getMentionedUsers(List<Post> ps);
-    /*
-       @REQUIRES :
-       @THROWS :
-       @MODIFIES :
-       @EFFECTS :
-     */
-
     // Restituisce la lista dei post effettuati dall’utente nella rete sociale
     // il cui nome è dato dal parametro username
     List<Post> writtenBy(String username);
-    /*
-       @REQUIRES :
-       @THROWS :
-       @MODIFIES :
-       @EFFECTS :
-     */
-
-    // Restituisce la lista dei post effettuati dall’utente
-    // il cui nome è dato dal parametro username presenti nella lista ps
-    List<Post> writtenBy(List<Post> ps, String username);
     /*
        @REQUIRES :
        @THROWS :

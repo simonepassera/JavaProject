@@ -10,6 +10,8 @@ public class Message implements Post {
                                 AF(text) = testo (massimo 140 caratteri) del post, in cui è possibile menzionare
                                            altri utenti appartenenti alla rete sociale con l' uso del simbolo (@)
                                            ad es @Nome1 @Nome2 ...
+                                           Inoltre un utente può mettere un mi piace ad un post, scrivendo #LIKE_id
+                                           dove id è l' identificatore univoco del post
                                 AF(timestamp) = data e ora di invio del post
      */
 

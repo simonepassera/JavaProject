@@ -121,9 +121,16 @@ public class MicroBlog implements SocialNetwork {
 
     }
 
-    public Map<String, Set<String>> guessFollowers(List<Post> ps) {
+    // Restituisce la rete sociale derivata dalla lista di post appartenenti al
+    // social network, analizzando i mi piace e le persone menzionate
+    public static Map<String, Set<String>> guessFollowers(List<Post> ps){
         return null;
     }
+    /*
+       @REQUIRES : ps != null && POSTS.containsAll(ps)
+       @THROWS : NullPointerException, IllegalArgumentException
+       @RETURN : Sottoinsieme di USERS
+     */
 
     public List<String> influencers() {
         return null;
@@ -133,17 +140,32 @@ public class MicroBlog implements SocialNetwork {
         return null;
     }
 
-    public Set<String> getMentionedUsers(List<Post> ps) {
+    // Restituisce l’insieme degli utenti menzionati (inclusi) nella lista di post
+    public static Set<String> getMentionedUsers(List<Post> ps){
         return null;
     }
+    /*
+       @REQUIRES :
+       @THROWS :
+       @MODIFIES :
+       @EFFECTS :
+     */
 
     public List<Post> writtenBy(String username) {
         return null;
     }
 
-    public List<Post> writtenBy(List<Post> ps, String username) {
+    // Restituisce la lista dei post effettuati dall’utente
+    // il cui nome è dato dal parametro username presenti nella lista ps
+    public static List<Post> writtenBy(List<Post> ps, String username) {
         return null;
     }
+    /*
+       @REQUIRES :
+       @THROWS :
+       @MODIFIES :
+       @EFFECTS :
+     */
 
     public List<Post> containing(List<String> words) {
         return null;
