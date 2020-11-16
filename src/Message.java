@@ -1,6 +1,6 @@
 import java.sql.Timestamp;
 
-public class Message implements Post{
+public class Message implements Post {
     /*
         Representation Invariant : author != null && text != null && timestamp != null
                                    && author.length() != 0 && 0 < text.length() <= 140
@@ -21,13 +21,13 @@ public class Message implements Post{
     private Timestamp timestamp;
 
     // Crea un messaggio
-    public Message(String author, String text, Timestamp timestamp){
+    public Message(String author, String text, Timestamp timestamp) throws NullPointerException, IllegalArgumentException {
         if(author == null || text == null || timestamp == null)
         {
             throw new NullPointerException();
         }
 
-        if(author.length() == 0 || text.length() == 0 || text.length() > 140)
+        if(author.isEmpty() || text.isEmpty() || text.length() > 140)
         {
             throw new IllegalArgumentException();
         }
@@ -45,26 +45,26 @@ public class Message implements Post{
      */
 
     // Restituisce l' identificatore univoco del post
-    public Integer getId(){
+    public Integer getId() {
         return id;
     }
     // @RETURN : id
 
     // Restituisce il nome utente dell' autore del post
-    public String getAuthor(){
+    public String getAuthor() {
         return author;
     }
     // @RETURN : author
 
     // Restituisce il corpo del messaggio contenuto nel post
-    public String getText(){
+    public String getText() {
         return text;
     }
     // @RETURN : text
 
     // Restituisce data e ora di invio del post
-    public Timestamp getTimestamp(){
-        return timestamp;
+    public Timestamp getTimestamp() {
+        return (Timestamp) timestamp.clone();
     }
     // @RETURN : timestamp
 }

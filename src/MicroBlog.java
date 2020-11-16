@@ -12,7 +12,7 @@ public class MicroBlog implements SocialNetwork {
 
     // Crea un nuovo utente e l' insieme delle persone da lui seguite nella rete sociale,
     // restituisce il proprio username
-    public String addUser(String username, List<String> following){
+    public String addUser(String username, List<String> following) throws NullPointerException, IllegalArgumentException {
         if(username == null || following == null) throw new NullPointerException();
         if(users.containsKey(username)) throw new IllegalArgumentException();
 
@@ -43,7 +43,7 @@ public class MicroBlog implements SocialNetwork {
      */
 
     // Crea un nuovo utente nella rete sociale, restituisce il proprio username
-    public String addUser(String username){
+    public String addUser(String username) throws NullPointerException, IllegalArgumentException {
         if(username == null) throw new NullPointerException();
         if(users.containsKey(username)) throw new IllegalArgumentException();
 
@@ -60,7 +60,7 @@ public class MicroBlog implements SocialNetwork {
      */
 
     // Aggiunge ad username un follower
-    public void addFollower(String username, String follower) {
+    public void addFollower(String username, String follower) throws NullPointerException, IllegalArgumentException {
         if(username == null || follower == null) throw new NullPointerException();
         if(username.equals(follower) || !users.containsKey(follower) || !users.containsKey(username)) throw new IllegalArgumentException();
 
@@ -88,7 +88,7 @@ public class MicroBlog implements SocialNetwork {
 
 
     // Aggiunge ad username un insieme di followers
-    public void addFollower(String username, List<String> followers) {
+    public void addFollower(String username, List<String> followers) throws NullPointerException, IllegalArgumentException {
         if(username == null || followers == null) throw new NullPointerException();
         if(!users.containsKey(username)) throw new IllegalArgumentException();
 

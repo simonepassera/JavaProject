@@ -16,7 +16,7 @@ public interface SocialNetwork {
 
     // Crea un nuovo utente e l' insieme delle persone da lui seguite nella rete sociale,
     // restituisce il proprio username
-    String addUser(String username, List<String> following);
+    String addUser(String username, List<String> following) throws NullPointerException, IllegalArgumentException;
     /*
        @REQUIRES : username != null && following != null &&
                    USERS.contains(username) == false && USERS.containsAll(following) == true
@@ -28,7 +28,7 @@ public interface SocialNetwork {
      */
 
     // Crea un nuovo utente nella rete sociale, restituisce il proprio username
-    String addUser(String username);
+    String addUser(String username) throws NullPointerException, IllegalArgumentException;
     /*
        @REQUIRES : username != null && USERS.contains(username) == false
        @THROWS : NullPointerException, IllegalArgumentException
@@ -38,7 +38,7 @@ public interface SocialNetwork {
      */
 
     // Aggiunge ad username un follower
-    void addFollower(String username, String follower);
+    void addFollower(String username, String follower) throws NullPointerException, IllegalArgumentException;
     /*
        @REQUIRES : username != null && follower != null && username.equals(follower) == false
                    && USERS.contains(follower) == true && USERS.contains(username) == true
@@ -48,7 +48,7 @@ public interface SocialNetwork {
      */
 
     // Aggiunge ad username un insieme di followers
-    void addFollower(String username, List<String> followers);
+    void addFollower(String username, List<String> followers) throws NullPointerException, IllegalArgumentException;
     /*
        @REQUIRES : username != null && followers != null && USERS.contains(username) == true
                    && USERS.containsAll(followers) == true && for all i != j : 0 <= i, j < followers.size() ==> (followers.get(i) != followers.get(j))
@@ -61,19 +61,22 @@ public interface SocialNetwork {
     // Aggiunge un post creato da username
     void addPost(String username, Post post);
     /*
-       @REQUIRES :
-       @THROWS :
-       @MODIFIES :
-       @EFFECTS :
+       @REQUIRES : username != null && post != null && USERS.contains(username) == true
+                   && username.equals(post.getAuthor()) == true && post.getTimestamp().compareTo(currentTime) <= 0
+       @THROWS : NullPointerException, IllegalArgumentException
+       @MODIFIES : POSTS
+       @EFFECTS : <POSTS>_post = <POSTS>_pre U post
      */
 
     // Aggiunge un insieme di post creati da username
-    void addPost(String username, List<Post> post);
+    void addPost(String username, List<Post> posts);
     /*
-       @REQUIRES :
-       @THROWS :
-       @MODIFIES :
-       @EFFECTS :
+       @REQUIRES : username != null && posts != null && USERS.contains(username) == true
+                   && for all i : 0 <= i < posts.size() ==> (username.equals(posts.get(i).getAuthor()) == true)
+                   && for all i : 0 <= i < posts.size() ==> (posts.get(i).getTimestamp().compareTo(currentTime) <= 0)
+       @THROWS : NullPointerException, IllegalArgumentException
+       @MODIFIES : POSTS
+       @EFFECTS : <POSTS>_post = <POSTS>_pre U [ for all i : 0 <= i < posts.size() ==> posts.get(i) ]
      */
 
     // Restituisce la rete sociale derivata dalla lista di post
