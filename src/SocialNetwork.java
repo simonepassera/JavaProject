@@ -63,7 +63,8 @@ public interface SocialNetwork {
     /*
        @REQUIRES : username != null && post != null && USERS.contains(username) == true
                    && username.equals(post.getAuthor()) == true && post.getTimestamp().compareTo(currentTime) <= 0
-                   && post.getText().
+                   && post.getText().containsAll(#LIKE_id) ==> (POSTS.contains(id) == true) && <username, following.contains(POSTS.get(id).getAuthor()) == true>
+                   && post.getText().containsAll(@user_mention) ==> (USERS.contains(user_mention) == true) && <username, following.contains(user_mention == true)>
        @THROWS : NullPointerException, IllegalArgumentException
        @MODIFIES : POSTS
        @EFFECTS : <POSTS>_post = <POSTS>_pre U post
@@ -76,7 +77,8 @@ public interface SocialNetwork {
                    && for all i != j : 0 <= i, j < posts.size() ==> (posts.get(i) != posts.get(j))
                    && for all i : 0 <= i < posts.size() ==> (username.equals(posts.get(i).getAuthor()) == true)
                    && for all i : 0 <= i < posts.size() ==> (posts.get(i).getTimestamp().compareTo(currentTime) <= 0)
-                   &&
+                   && for all i : 0 <= i < posts.size() ==> (posts.get(i).getText().containsAll(#LIKE_id) ==> (POSTS.contains(id) == true) && <username, following.contains(POSTS.get(id).getAuthor()) == true>)
+                   && for all i : 0 <= i < posts.size() ==> (posts.get(i).getText().containsAll(@user_mention) ==> (USERS.contains(user_mention) == true) && <username, following.contains(user_mention == true)>)
        @THROWS : NullPointerException, IllegalArgumentException
        @MODIFIES : POSTS
        @EFFECTS : <POSTS>_post = <POSTS>_pre U [ for all i : 0 <= i < posts.size() ==> posts.get(i) ]
@@ -86,38 +88,30 @@ public interface SocialNetwork {
     // un numero maggiore di “follower”
     List<String> influencers();
     /*
-       @REQUIRES :
-       @THROWS :
-       @MODIFIES :
-       @EFFECTS :
+       @RETURN : List of USERS | for all i : 0 <= i < USERS.size()-1 ==> (List.get(i).followers() >= List.get(i+1).followers())
      */
 
     // Restituisce l’insieme degli utenti menzionati (inclusi) nei post presenti nella rete sociale
     Set<String> getMentionedUsers();
     /*
-       @REQUIRES :
-       @THROWS :
-       @MODIFIES :
-       @EFFECTS :
+       @RETURN : Set of USERS | for all i : 0 <= i < Set.size() ==> (POSTS.getText.contains(@Set.get(i)) == true)
      */
 
     // Restituisce la lista dei post effettuati dall’utente nella rete sociale
     // il cui nome è dato dal parametro username
     List<Post> writtenBy(String username);
     /*
-       @REQUIRES :
-       @THROWS :
-       @MODIFIES :
-       @EFFECTS :
+       @REQUIRES : username != null && USERS.contains(username) == true
+       @THROWS : NullPointerException, IllegalArgumentException
+       @RETURN : List of POSTS | for all i : 0 <= i < List.size() ==> (List.get(i).getAuthor().equals(username) == true)
      */
 
     // Restituisce la lista dei post presenti nella rete sociale che includono
     // almeno una delle parole presenti nella lista delle parole argomento del metodo
     List<Post> containing(List<String> words);
     /*
-       @REQUIRES :
-       @THROWS :
-       @MODIFIES :
-       @EFFECTS :
+       @REQUIRES : words != null
+       @THROWS : NullPointerException
+       @RETURN : List of POSTS | for all i : 0 <= i < List.size() ==> (EXISTS string in words | (List.get(i).getText().contains(string) == true))
      */
 }
