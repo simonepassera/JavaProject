@@ -59,7 +59,7 @@ public interface SocialNetwork {
      */
 
     // Aggiunge un post creato da username
-    void addPost(String username, Post post);
+    void addPost(String username, Post post) throws NullPointerException, IllegalArgumentException;
     /*
        @REQUIRES : username != null && post != null && USERS.contains(username) == true
                    && username.equals(post.getAuthor()) == true && post.getTimestamp().compareTo(currentTime) <= 0
@@ -71,7 +71,7 @@ public interface SocialNetwork {
      */
 
     // Aggiunge un insieme di post creati da username
-    void addPost(String username, List<Post> posts);
+    void addPost(String username, List<Post> posts) throws NullPointerException, IllegalArgumentException;
     /*
        @REQUIRES : username != null && posts != null && USERS.contains(username) == true
                    && for all i != j : 0 <= i, j < posts.size() ==> (posts.get(i) != posts.get(j))
@@ -99,7 +99,7 @@ public interface SocialNetwork {
 
     // Restituisce la lista dei post effettuati dall’utente nella rete sociale
     // il cui nome è dato dal parametro username
-    List<Post> writtenBy(String username);
+    List<Post> writtenBy(String username) throws NullPointerException, IllegalArgumentException;
     /*
        @REQUIRES : username != null && USERS.contains(username) == true
        @THROWS : NullPointerException, IllegalArgumentException
@@ -108,7 +108,7 @@ public interface SocialNetwork {
 
     // Restituisce la lista dei post presenti nella rete sociale che includono
     // almeno una delle parole presenti nella lista delle parole argomento del metodo
-    List<Post> containing(List<String> words);
+    List<Post> containing(List<String> words) throws NullPointerException;
     /*
        @REQUIRES : words != null
        @THROWS : NullPointerException
