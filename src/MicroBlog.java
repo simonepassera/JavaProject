@@ -11,11 +11,28 @@ public class MicroBlog implements SocialNetwork {
     private Map<String, Set<String>> users;
     private Map<String, Integer> followers;
 
+    // Crea un nuovo utente nella rete sociale, restituisce il proprio username
+    public String addUser(String username) throws NullPointerException, IllegalArgumentException {
+        if(username == null) throw new NullPointerException();
+        if(users.containsKey(username) || !username.matches("[a-zA-Z_0-9]{5,15}")) throw new IllegalArgumentException();
+
+        users.put(username, null);
+
+        return username;
+    }
+    /*
+       @REQUIRES : username != null && users.containsKey(username) == false && username.matches("[a-zA-Z_0-9]{5,15}") == true
+       @THROWS : NullPointerException, IllegalArgumentException
+       @MODIFIES : users
+       @EFFECTS : users.put(username, null)
+       @RETURN : username
+     */
+
     // Crea un nuovo utente e l' insieme delle persone da lui seguite nella rete sociale,
     // restituisce il proprio username
     public String addUser(String username, List<String> following) throws NullPointerException, IllegalArgumentException {
         if(username == null || following == null) throw new NullPointerException();
-        if(users.containsKey(username)) throw new IllegalArgumentException();
+        if(users.containsKey(username) || !username.matches("[a-zA-Z_0-9]{5,15}")) throw new IllegalArgumentException();
 
         for(String u : following)
         {
@@ -34,29 +51,13 @@ public class MicroBlog implements SocialNetwork {
         return username;
     }
     /*
-       @REQUIRES : username != null && following != null &&
+       @REQUIRES : username != null && users.containsKey(username) == false &&
+                   username.matches("[a-zA-Z_0-9]{5,15}") == true && following != null &&
                    for all i : 0 <= i < following.size() ==> users.containsKey(following.get(i)) == true &&
                    for all i != j : 0 <= i, j < following.size() ==> (following.get(i) != following.get(j))
        @THROWS : NullPointerException, IllegalArgumentException
        @MODIFIES :  users
        @EFFECTS : users.put(username, following)
-       @RETURN : username
-     */
-
-    // Crea un nuovo utente nella rete sociale, restituisce il proprio username
-    public String addUser(String username) throws NullPointerException, IllegalArgumentException {
-        if(username == null) throw new NullPointerException();
-        if(users.containsKey(username)) throw new IllegalArgumentException();
-
-        users.put(username, null);
-
-        return username;
-    }
-    /*
-       @REQUIRES : username != null && users.containsKey(username) == false
-       @THROWS : NullPointerException, IllegalArgumentException
-       @MODIFIES : users
-       @EFFECTS : users.put(username, null)
        @RETURN : username
      */
 
@@ -115,12 +116,12 @@ public class MicroBlog implements SocialNetwork {
      */
 
     // Aggiunge un post creato da username
-    public void addPost(String username, Post post) {
+    public void addPost(String username, String text) {
 
     }
 
     // Aggiunge un insieme di post creati da username
-    public void addPost(String username, List<Post> post) {
+    public void addPost(String username, List<String> texts) {
 
     }
 
