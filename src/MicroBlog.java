@@ -12,9 +12,10 @@ public class MicroBlog implements SocialNetwork {
     private Map<String, Integer> followers;
 
     // Crea un nuovo utente nella rete sociale, restituisce il proprio username
-    public String addUser(String username) throws NullPointerException, IllegalArgumentException {
+    public String addUser(String username) throws NullPointerException, UsernameException {
         if(username == null) throw new NullPointerException();
-        if(users.containsKey(username) || !username.matches("[a-zA-Z_0-9]{5,15}")) throw new IllegalArgumentException();
+        if(users.containsKey(username)) throw new UsernameException("Username" + username + "already exists");
+        if(!username.matches("[a-zA-Z_0-9]{5,15}")) throw new UsernameException("Username" + username + "illegal format");
 
         users.put(username, null);
 
@@ -22,16 +23,18 @@ public class MicroBlog implements SocialNetwork {
     }
     /*
        @REQUIRES : username != null && users.containsKey(username) == false && username.matches("[a-zA-Z_0-9]{5,15}") == true
-       @THROWS : NullPointerException, IllegalArgumentException
+       @THROWS : NullPointerException, UsernameException
        @MODIFIES : users
        @EFFECTS : users.put(username, null)
        @RETURN : username
      */
 
     // Aggiunge ad username un follower
-    public void addFollower(String username, String follower) throws NullPointerException, IllegalArgumentException {
+    public void addFollower(String username, String follower) throws NullPointerException, UsernameException, FollowerException {
         if(username == null || follower == null) throw new NullPointerException();
-        if(username.equals(follower) || !users.containsKey(follower) || !users.containsKey(username)) throw new IllegalArgumentException();
+        if(!users.containsKey(username)) throw new UsernameException("Username" + username + "not exists");
+        if(username.equals(follower)) throw new FollowerException("You can't follow yourself");
+        if(!users.containsKey(follower)) throw new FollowerException("Follower" + follower + "not exists");
 
         Set<String> set_following;
 
@@ -50,15 +53,24 @@ public class MicroBlog implements SocialNetwork {
     /*
        @REQUIRES : username != null && follower != null && username.equals(follower) == false
                    && users.containsKey(follower) == true && users.containsKey(username) == true
-       @THROWS : NullPointerException, IllegalArgumentException
+       @THROWS : NullPointerException, UsernameException, FollowerException
        @MODIFIES : users
        @EFFECTS : users.put(follower, username)
      */
 
     // Aggiunge un post creato da username
-    public void addPost(String username, String text) {
-
+    public void addPost(String username, String text) throws NullPointerException, UsernameException, LikeException, MentionException {
+        if(username == null || text == null) throw new NullPointerException();
+        if(!users.containsKey(username)) throw new UsernameException("Username" + username + "not exists");
     }
+    /*
+       @REQUIRES : username != null && text != null && users.containsKey(username) == true
+                   && text.equals("#LIKE_id") ==> ((POSTS.contains(id) == true) && <username, following.contains(POSTS.get(id).getAuthor()) == true>)
+                   && for all @user_mention in text ==> ((USERS.contains(user_mention) == true) && <username, following.contains(user_mention == true)>)
+       @THROWS : NullPointerException, UsernameException, LikeException, MentionException;
+       @MODIFIES : POSTS
+       @EFFECTS : <POSTS>_post = <POSTS>_pre U <unique_id, username, text, current_time>
+     */
 
     // Restituisce gli utenti più influenti delle rete sociale, ovvero quelli che hanno
     // un numero maggiore di “follower”

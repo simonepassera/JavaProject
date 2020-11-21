@@ -18,33 +18,33 @@ public interface SocialNetwork {
      */
 
     // Crea un nuovo utente nella rete sociale, restituisce il proprio username
-    String addUser(String username) throws NullPointerException, IllegalArgumentException;
+    String addUser(String username) throws NullPointerException, UsernameException;
     /*
        @REQUIRES : username != null && USERS.contains(username) == false &&
                    username.matches("[a-zA-Z_0-9]{5,15}") == true
-       @THROWS : NullPointerException, IllegalArgumentException
+       @THROWS : NullPointerException, UsernameException
        @MODIFIES : USERS
-       @EFFECTS : <USERS>_post = <USERS>_pre U <username, () >
+       @EFFECTS : <USERS>_post = <USERS>_pre U <username, ()>
        @RETURN : username
      */
 
     // Aggiunge ad username un follower
-    void addFollower(String username, String follower) throws NullPointerException, IllegalArgumentException;
+    void addFollower(String username, String follower) throws NullPointerException, UsernameException, FollowerException;
     /*
        @REQUIRES : username != null && follower != null && username.equals(follower) == false
                    && USERS.contains(follower) == true && USERS.contains(username) == true
-       @THROWS : NullPointerException, IllegalArgumentException
+       @THROWS : NullPointerException, UsernameException, FollowerException
        @MODIFIES : USERS
        @EFFECTS : <USERS>_post = <USERS>_pre U <follower, username>
      */
 
     // Aggiunge un post creato da username
-    void addPost(String username, String text) throws NullPointerException, IllegalArgumentException;
+    void addPost(String username, String text) throws NullPointerException, UsernameException, LikeException, MentionException;
     /*
        @REQUIRES : username != null && text != null && USERS.contains(username) == true
                    && text.equals("#LIKE_id") ==> ((POSTS.contains(id) == true) && <username, following.contains(POSTS.get(id).getAuthor()) == true>)
                    && for all @user_mention in text ==> ((USERS.contains(user_mention) == true) && <username, following.contains(user_mention == true)>)
-       @THROWS : NullPointerException, IllegalArgumentException
+       @THROWS : NullPointerException, UsernameException, LikeException, MentionException
        @MODIFIES : POSTS
        @EFFECTS : <POSTS>_post = <POSTS>_pre U <unique_id, username, text, current_time>
      */
