@@ -28,19 +28,6 @@ public interface SocialNetwork {
        @RETURN : username
      */
 
-    // Crea un nuovo utente e l' insieme delle persone da lui seguite nella rete sociale,
-    // restituisce il proprio username
-    String addUser(String username, List<String> following) throws NullPointerException, IllegalArgumentException;
-    /*
-       @REQUIRES : username != null && username.matches("[a-zA-Z_0-9]{5,15}") == true && following != null &&
-                   USERS.contains(username) == false && USERS.containsAll(following) == true
-                   && for all i != j : 0 <= i, j < following.size() ==> (following.get(i) != following.get(j))
-       @THROWS : NullPointerException, IllegalArgumentException
-       @MODIFIES :  USERS
-       @EFFECTS : <USERS>_post = <USERS>_pre U <username, following>
-       @RETURN : username
-     */
-
     // Aggiunge ad username un follower
     void addFollower(String username, String follower) throws NullPointerException, IllegalArgumentException;
     /*
@@ -49,17 +36,6 @@ public interface SocialNetwork {
        @THROWS : NullPointerException, IllegalArgumentException
        @MODIFIES : USERS
        @EFFECTS : <USERS>_post = <USERS>_pre U <follower, username>
-     */
-
-    // Aggiunge ad username un insieme di followers
-    void addFollower(String username, List<String> followers) throws NullPointerException, IllegalArgumentException;
-    /*
-       @REQUIRES : username != null && followers != null && USERS.contains(username) == true
-                   && USERS.containsAll(followers) == true && for all i != j : 0 <= i, j < followers.size() ==> (followers.get(i) != followers.get(j))
-                   && for all i : 0 <= i < followers.size() ==> (username.equals(followers.get(i)))
-       @THROWS : NullPointerException, IllegalArgumentException
-       @MODIFIES : USERS
-       @EFFECTS : <USERS>_post = <USERS>_pre U [ for all i : 0 <= i < followers.size() ==> <followers.get(i), username> ]
      */
 
     // Aggiunge un post creato da username
@@ -71,18 +47,6 @@ public interface SocialNetwork {
        @THROWS : NullPointerException, IllegalArgumentException
        @MODIFIES : POSTS
        @EFFECTS : <POSTS>_post = <POSTS>_pre U <unique_id, username, text, current_time>
-     */
-
-    // Aggiunge un insieme di post creati da username
-    void addPost(String username, List<String> texts) throws NullPointerException, IllegalArgumentException;
-    /*
-       @REQUIRES : username != null && texts != null && USERS.contains(username) == true
-                   && for all i != j : 0 <= i, j < texts.size() ==> (texts.get(i) != texts.get(j))
-                   && for all i : 0 <= i < texts.size() ==> (texts.get(i).equals("#LIKE_id") ==> ((POSTS.contains(id) == true) && <username, following.contains(POSTS.get(id).getAuthor()) == true>))
-                   && for all i : 0 <= i < texts.size() ==> (for all @user_mention in texts.get(i) ==> ((USERS.contains(user_mention) == true) && <username, following.contains(user_mention == true)>))
-       @THROWS : NullPointerException, IllegalArgumentException
-       @MODIFIES : POSTS
-       @EFFECTS : <POSTS>_post = <POSTS>_pre U [ for all i : 0 <= i < texts.size() ==> <unique_id, username, texts.get(i), current_time> ]
      */
 
     // Restituisce gli utenti più influenti delle rete sociale, ovvero quelli che hanno
@@ -115,4 +79,8 @@ public interface SocialNetwork {
        @THROWS : NullPointerException
        @RETURN : List of POSTS | for all i : 0 <= i < List.size() ==> (EXISTS string in words | (List.get(i).getText().contains(string) == true))
      */
+
+    // ********************
+    // *** TEST METHODS ***
+    // ********************
 }
