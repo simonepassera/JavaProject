@@ -4,10 +4,22 @@ import java.util.regex.*;
 
 public class MicroBlog implements SocialNetwork {
     /*
-        Representation Invariant : users != null && for all keys of users ==> (users.get(key).contains(key) == false)
-                                   &&
+        Representation Invariant : users != null && for all keys in users ==> ((key != null) && (key.matches("[a-zA-Z_0-9]{5,15}") == true))
+                                   && users.keySet().equals(followers.keySet()) && for all keys of users ==> (users.get(key).contains(key) == false)
+                                   && followers != null && for all keys of followers ==> (followers.get(key) >= 0)
+                                   && feed != null && for all keys of feed ==> (feed.get(key).getId().equals(key) == true)
+                                   && for all keys in feed ==>
+                                        (feed.get(key).getText.matches("#LIKE_[0-9]+")) ==>
+                                          feed.containsKey(Integer.parseInt("[0-9]+")) == true) && (users.get(feed.get(key).getAuthor).contains(feed.get(Integer.parseInt("[0-9]+")).getAuthor()) == true)))
+                                   && for all keys in feed ==>
+                                        (for all @user_mention in feed.get(key).getText() ==>
+                                          ((users.contains(user_mention) == true) && (users.get(feed.get(key).getAuthor()).contains(user_mention) == true)))
+                                   && mentioned != null && users.keySet().containsAll(mentioned) == true
 
         Abstraction function : AF(users) = Insieme di coppie <utente, insieme delle persone da lui seguite>
+                               AF(followers) = Insieme di coppie <utente, numero di followers>
+                               AF(feed) = Insieme di coppie <id, post> dove post.getId() == id
+                               AF(mentioned) = Sottoinsieme di utenti, che sono stati menzionati nei post
      */
 
     private Map<String, Set<String>> users;
@@ -26,7 +38,7 @@ public class MicroBlog implements SocialNetwork {
         return username;
     }
     /*
-       @REQUIRES : username != null && users.containsKey(username) == false && username.matches("[a-zA-Z_0-9]{5,15}") == true
+       @REQUIRES : username != null && users.containsKey(username) == false
        @THROWS : NullPointerException, UsernameException
        @MODIFIES : users
        @EFFECTS : users.put(username, null)
@@ -55,8 +67,8 @@ public class MicroBlog implements SocialNetwork {
         users.put(follower, set_following);
     }
     /*
-       @REQUIRES : username != null && follower != null && username.equals(follower) == false
-                   && users.containsKey(follower) == true && users.containsKey(username) == true
+       @REQUIRES : username != null && follower != null && users.containsKey(username) == true
+                   && users.containsKey(follower) == true
        @THROWS : NullPointerException, UsernameException, FollowerException
        @MODIFIES : users
        @EFFECTS : users.put(follower, username)
@@ -100,9 +112,6 @@ public class MicroBlog implements SocialNetwork {
     }
     /*
        @REQUIRES : username != null && text != null && users.containsKey(username) == true
-                   && text.isEmpty() == false && text.length() > 140 == false
-                   && text.matches("#LIKE_[0-9]+")) ==> ((feed.containsKey("[0-9]+") == true) && (users.get(username).contains(feed.get(id).getAuthor()) == true))
-                   && for all @user_mention in text ==> ((users.contains(user_mention) == true) && (users.get(username).contains(user_mention) == true))
        @THROWS : NullPointerException, UsernameException, LikeException, MentionException, PostException
        @MODIFIES : feed, mentioned
        @EFFECTS : feed.put(new_post.getId(), new_post)
@@ -123,7 +132,7 @@ public class MicroBlog implements SocialNetwork {
          return users;
     }
     /*
-       @RETURN : followers | for all i : 0 <= i < followers.size()-1 ==> (followers.get(i).followers() >= List.get(i+1).followers())
+       @RETURN : keys of followers order by values
      */
 
     // Restituisce l’insieme degli utenti menzionati (inclusi) nei post presenti nella rete sociale

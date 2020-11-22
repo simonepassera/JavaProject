@@ -4,8 +4,10 @@ public interface Post {
     /*
         Overview : Tipo non modificabile di un messaggio contenente al massimo 140 caratteri,
                    Un post è definito da un insieme di informazioni :
-                   id ->        identificatore univoco del post
-                   author ->    utente univoco della rete sociale che ha scritto il post
+                   id -> identificatore univoco del post, (numero naturale)
+                   author -> utente univoco della rete sociale che ha scritto il post,
+                             (il nome utente è compreso tra 5 e 15 caratteri, può contenere caratteri
+                              maiuscoli, minuscoli, numeri e sottolineato)
                    text -> testo (massimo 140 caratteri) del post
                    timestamp -> data e ora di invio del post
 

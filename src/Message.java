@@ -2,33 +2,30 @@ import java.sql.Timestamp;
 
 public class Message implements Post {
     /*
-        Representation Invariant : author != null && text != null && timestamp != null
-                                   && author.length() != 0 && 0 < text.length() <= 140
+        Representation Invariant : id != null && id >= 0 && author != null && author.matches("[a-zA-Z_0-9]{5,15}") == true
+                                   && text != null && 0 < text.length() <= 140 && timestamp != null
 
-        Abstraction function :  AF(id) = identificatore univoco del post
-                                AF(author) = utente univoco della rete sociale che ha scritto il post
+        Abstraction function :  AF(id) = identificatore univoco del post, (numero naturale)
+                                AF(author) = utente univoco della rete sociale che ha scritto il post,
+                                             (il nome utente è compreso tra 5 e 15 caratteri, può contenere caratteri
+                                             maiuscoli, minuscoli, numeri e sottolineato)
                                 AF(text) = testo (massimo 140 caratteri) del post
                                 AF(timestamp) = data e ora di invio del post
      */
 
     static int id_generator = 0;
 
-    private int id;
-    private String author;
-    private String text;
-    private Timestamp timestamp;
+    private final Integer id;
+    private final String author;
+    private final String text;
+    private final Timestamp timestamp;
 
     // Crea un messaggio
-    public Message(String author, String text, Timestamp timestamp) throws NullPointerException, IllegalArgumentException {
-        if(author == null || text == null || timestamp == null)
-        {
-            throw new NullPointerException();
-        }
-
-        if(author.isEmpty() || text.isEmpty() || text.length() > 140)
-        {
-            throw new IllegalArgumentException();
-        }
+    public Message(String author, String text, Timestamp timestamp) throws NullPointerException, PostException {
+        if(author == null || text == null || timestamp == null) throw new NullPointerException();
+        if(!author.matches("[a-zA-Z_0-9]{5,15}")) throw new PostException("Author" + author + "illegal format");
+        if(text.isEmpty()) throw new PostException("The text of" + author + "is empty");
+        if(text.length() > 140) throw new PostException("The text of" + author + "is too long (max 140 characters)");
 
         this.id = ++id_generator;
         this.author = author;
@@ -36,10 +33,10 @@ public class Message implements Post {
         this.timestamp = (Timestamp) timestamp.clone();
     }
     /*
-       @REQUIRES : id != null && author != null && text != null && timestamp != null
-       @THROWS : NullPointerException, IllegalArgumentException
-       @MODIFIES : id, author, text
-       @EFFECTS :  Inizializza id, author, text con i rispettivi parametri
+       @REQUIRES : author != null && text != null && timestamp != null
+       @THROWS : NullPointerException, PostException
+       @MODIFIES : id, author, text, timestamp
+       @EFFECTS :  Initialize id, author, text, timestamp
      */
 
     // Restituisce l' identificatore univoco del post
