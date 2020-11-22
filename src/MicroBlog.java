@@ -9,8 +9,8 @@ public class MicroBlog implements SocialNetwork {
                                    && followers != null && for all keys of followers ==> (followers.get(key) >= 0)
                                    && feed != null && for all keys of feed ==> (feed.get(key).getId().equals(key) == true)
                                    && for all keys in feed ==>
-                                        (feed.get(key).getText.matches("#LIKE_[0-9]+")) ==>
-                                          feed.containsKey(Integer.parseInt("[0-9]+")) == true) && (users.get(feed.get(key).getAuthor).contains(feed.get(Integer.parseInt("[0-9]+")).getAuthor()) == true)))
+                                        (feed.get(key).getText.matches("#LIKE_[0-9]+") ==>
+                                          ((feed.containsKey(Integer.parseInt("[0-9]+")) == true) && (users.get(feed.get(key).getAuthor()).contains(feed.get(Integer.parseInt("[0-9]+")).getAuthor()) == true)))
                                    && for all keys in feed ==>
                                         (for all @user_mention in feed.get(key).getText() ==>
                                           ((users.contains(user_mention) == true) && (users.get(feed.get(key).getAuthor()).contains(user_mention) == true)))
@@ -120,7 +120,7 @@ public class MicroBlog implements SocialNetwork {
     // Restituisce gli utenti più influenti delle rete sociale, ovvero quelli che hanno
     // un numero maggiore di “follower”
     public List<String> influencers() {
-         List<Map.Entry<String, Integer>> followers = new ArrayList<>(this.followers.entrySet());
+         List<Map.Entry<String, Integer>> followers = new ArrayList<Map.Entry<String, Integer>>(this.followers.entrySet());
          followers.sort(Map.Entry.comparingByValue());
 
          List<String> users = new ArrayList<String>();
@@ -132,25 +132,90 @@ public class MicroBlog implements SocialNetwork {
          return users;
     }
     /*
-       @RETURN : keys of followers order by values
+       @RETURN : followers.keySet() order by values
      */
 
     // Restituisce l’insieme degli utenti menzionati (inclusi) nei post presenti nella rete sociale
     public Set<String> getMentionedUsers() {
-        return null;
+        return new HashSet<String>(mentioned);
     }
+    /*
+       @RETURN : mentioned
+     */
 
     // Restituisce la lista dei post effettuati dall’utente nella rete sociale
     // il cui nome è dato dal parametro username
-    public List<Post> writtenBy(String username) {
-        return null;
+    public List<Post> writtenBy(String username) throws NullPointerException, UsernameException {
+        if(username == null) throw new NullPointerException();
+        if(!users.containsKey(username)) throw new UsernameException("Username" + username + "not exists");
+
+        List<Post> messages = new ArrayList<Post>();
+
+        for(Map.Entry<Integer, Post> entry : feed.entrySet())
+        {
+            if(entry.getValue().getAuthor().equals(username))
+            {
+                messages.add(entry.getValue());
+            }
+        }
+
+        return messages;
     }
+    /*
+       @REQUIRES : username != null && users.contains(username) == true
+       @THROWS : NullPointerException, UsernameException
+       @RETURN : List of posts in feed | for all i : 0 <= i < List.size() ==> (List.get(i).getAuthor().equals(username) == true)
+     */
 
     // Restituisce la lista dei post presenti nella rete sociale che includono
     // almeno una delle parole presenti nella lista delle parole argomento del metodo
-    public List<Post> containing(List<String> words) {
-        return null;
+    public List<Post> containing(List<String> words) throws NullPointerException, IllegalArgumentException {
+        if(words == null || words.contains(null)) throw new NullPointerException();
+        if(words.isEmpty() || words.contains("")) throw new IllegalArgumentException();
+
+        List<Post> messages = new ArrayList<Post>();
+        List<Pattern> p = new ArrayList<Pattern>();
+
+        for(String w : words)
+        {
+            p.add(Pattern.compile(w));
+        }
+
+        Matcher m;
+        int i;
+        boolean b;
+
+        for(Map.Entry<Integer, Post> entry : feed.entrySet())
+        {
+            i = 0;
+            b = true;
+
+            while(i < p.size() && b)
+            {
+                m = p.get(i).matcher(entry.getValue().getAuthor());
+
+                if(m.find())
+                {
+                    b = false;
+                }
+
+                i++;
+            }
+
+            if(!b)
+            {
+                messages.add(entry.getValue());
+            }
+        }
+
+        return messages;
     }
+    /*
+       @REQUIRES : words != null && words.isEmpty() == false && words.contains(null) == false
+                   && words.contains("") == false
+       @THROWS : NullPointerException, IllegalArgumentException
+       @RETURN : List of posts in feed | for all i : 0 <= i < List.size() ==> (EXISTS string in words | (List.get(i).getText() contains string))
+     */
 
     // ********************
     // ** STATIC METHODS **

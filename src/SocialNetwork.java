@@ -60,25 +60,26 @@ public interface SocialNetwork {
     // Restituisce l’insieme degli utenti menzionati (inclusi) nei post presenti nella rete sociale
     Set<String> getMentionedUsers();
     /*
-       @RETURN : Set of USERS | for all i : 0 <= i < Set.size() ==> (POSTS.getText.contains(@Set.get(i)) == true)
+       @RETURN : Set of USERS | for all i : 0 <= i < Set.size() ==> (EXISTS post in POSTS | (post.getText().contains("@Set.get(i)") == true))
      */
 
     // Restituisce la lista dei post effettuati dall’utente nella rete sociale
     // il cui nome è dato dal parametro username
-    List<Post> writtenBy(String username) throws NullPointerException, IllegalArgumentException;
+    List<Post> writtenBy(String username) throws NullPointerException, UsernameException;
     /*
        @REQUIRES : username != null && USERS.contains(username) == true
-       @THROWS : NullPointerException, IllegalArgumentException
+       @THROWS : NullPointerException, UsernameException
        @RETURN : List of POSTS | for all i : 0 <= i < List.size() ==> (List.get(i).getAuthor().equals(username) == true)
      */
 
     // Restituisce la lista dei post presenti nella rete sociale che includono
     // almeno una delle parole presenti nella lista delle parole argomento del metodo
-    List<Post> containing(List<String> words) throws NullPointerException;
+    List<Post> containing(List<String> words) throws NullPointerException, IllegalArgumentException;
     /*
-       @REQUIRES : words != null
-       @THROWS : NullPointerException
-       @RETURN : List of POSTS | for all i : 0 <= i < List.size() ==> (EXISTS string in words | (List.get(i).getText().contains(string) == true))
+       @REQUIRES : words != null && words.isEmpty() == false && words.contains(null) == false
+                   && words.contains("") == false
+       @THROWS : NullPointerException, IllegalArgumentException
+       @RETURN : List of POSTS | for all i : 0 <= i < List.size() ==> (EXISTS string in words | (List.get(i).getText() contains string))
      */
 
     // ********************
