@@ -1,4 +1,6 @@
+import java.sql.Timestamp;
 import java.util.*;
+import java.util.regex.*;
 
 public class MicroBlog implements SocialNetwork {
     /*
@@ -10,6 +12,8 @@ public class MicroBlog implements SocialNetwork {
 
     private Map<String, Set<String>> users;
     private Map<String, Integer> followers;
+    private Map<Integer, Post> feed;
+    private Set<String> mentioned;
 
     // Crea un nuovo utente nella rete sociale, restituisce il proprio username
     public String addUser(String username) throws NullPointerException, UsernameException {
@@ -59,17 +63,49 @@ public class MicroBlog implements SocialNetwork {
      */
 
     // Aggiunge un post creato da username
-    public void addPost(String username, String text) throws NullPointerException, UsernameException, LikeException, MentionException {
+    public void addPost(String username, String text) throws NullPointerException, UsernameException, LikeException, MentionException, PostException {
         if(username == null || text == null) throw new NullPointerException();
         if(!users.containsKey(username)) throw new UsernameException("Username" + username + "not exists");
+        if(text.isEmpty()) throw new PostException("The text of" + username + "is empty");
+        if(text.length() > 140) throw new PostException("The text of" + username + "is too long (max 140 characters)");
+
+        if(text.matches("#LIKE_[0-9]+"))
+        {
+            int id = Integer.parseInt(text.substring(6));
+
+            if(!feed.containsKey(id)) throw new LikeException("Post" + id + "not exists");
+            if(!users.get(username).contains(feed.get(id).getAuthor())) throw new LikeException("You can't like" + id);
+        }
+        else
+        {
+            Pattern mention = Pattern.compile("@([a-zA-Z_0-9]{5,15})");
+            Matcher m = mention.matcher(text);
+            String u;
+            Set<String> mentioned = new HashSet<String>();
+
+            while(m.find())
+            {
+                u = m.group(1);
+                mentioned.add(u);
+
+                if(!users.containsKey(u)) throw new MentionException("Username mentioned" + u + "not exists");
+                if(!users.get(username).contains(u)) throw new MentionException("You can't mention" + u);
+            }
+
+            this.mentioned.addAll(mentioned);
+        }
+
+        Post post = new Message(username, text, new Timestamp(System.currentTimeMillis()));
+        feed.put(post.getId(), post);
     }
     /*
        @REQUIRES : username != null && text != null && users.containsKey(username) == true
-                   && text.equals("#LIKE_id") ==> ((POSTS.contains(id) == true) && <username, following.contains(POSTS.get(id).getAuthor()) == true>)
-                   && for all @user_mention in text ==> ((USERS.contains(user_mention) == true) && <username, following.contains(user_mention == true)>)
-       @THROWS : NullPointerException, UsernameException, LikeException, MentionException;
-       @MODIFIES : POSTS
-       @EFFECTS : <POSTS>_post = <POSTS>_pre U <unique_id, username, text, current_time>
+                   && text.isEmpty() == false && text.length() > 140 == false
+                   && text.matches("#LIKE_[0-9]+")) ==> ((feed.containsKey("[0-9]+") == true) && (users.get(username).contains(feed.get(id).getAuthor()) == true))
+                   && for all @user_mention in text ==> ((users.contains(user_mention) == true) && (users.get(username).contains(user_mention) == true))
+       @THROWS : NullPointerException, UsernameException, LikeException, MentionException, PostException
+       @MODIFIES : feed, mentioned
+       @EFFECTS : feed.put(new_post.getId(), new_post)
      */
 
     // Restituisce gli utenti più influenti delle rete sociale, ovvero quelli che hanno

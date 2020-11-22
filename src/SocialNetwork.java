@@ -39,12 +39,12 @@ public interface SocialNetwork {
      */
 
     // Aggiunge un post creato da username
-    void addPost(String username, String text) throws NullPointerException, UsernameException, LikeException, MentionException;
+    void addPost(String username, String text) throws NullPointerException, UsernameException, LikeException, MentionException, PostException;
     /*
-       @REQUIRES : username != null && text != null && USERS.contains(username) == true
+       @REQUIRES : username != null && text != null && USERS.contains(username) == true && 0 < text.length() <= 140
                    && text.equals("#LIKE_id") ==> ((POSTS.contains(id) == true) && <username, following.contains(POSTS.get(id).getAuthor()) == true>)
-                   && for all @user_mention in text ==> ((USERS.contains(user_mention) == true) && <username, following.contains(user_mention == true)>)
-       @THROWS : NullPointerException, UsernameException, LikeException, MentionException
+                   && for all @user_mention in text ==> ((USERS.contains(user_mention) == true) && <username, following.contains(user_mention) == true>)
+       @THROWS : NullPointerException, UsernameException, LikeException, MentionException, PostException
        @MODIFIES : POSTS
        @EFFECTS : <POSTS>_post = <POSTS>_pre U <unique_id, username, text, current_time>
      */
