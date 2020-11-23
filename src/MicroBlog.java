@@ -10,7 +10,8 @@ public class MicroBlog implements SocialNetwork {
                                    && feed != null && for all keys of feed ==> (feed.get(key).getId().equals(key) == true)
                                    && for all keys in feed ==>
                                         (feed.get(key).getText.matches("#LIKE_[0-9]+") ==>
-                                          ((feed.containsKey(Integer.parseInt("[0-9]+")) == true) && (users.get(feed.get(key).getAuthor()).contains(feed.get(Integer.parseInt("[0-9]+")).getAuthor()) == true)))
+                                          ((feed.containsKey(Integer.parseInt("[0-9]+")) == true) && (feed.get(Integer.parseInt("[0-9]+")).getText().matches("#LIKE_[0-9]+") == false)
+                                          && (users.get(feed.get(key).getAuthor()).contains(feed.get(Integer.parseInt("[0-9]+")).getAuthor()) == true)))
                                    && for all keys in feed ==>
                                         (for all @user_mention in feed.get(key).getText() ==>
                                           ((users.contains(user_mention) == true) && (users.get(feed.get(key).getAuthor()).contains(user_mention) == true)))
@@ -30,8 +31,8 @@ public class MicroBlog implements SocialNetwork {
     // Crea un nuovo utente nella rete sociale, restituisce il proprio username
     public String addUser(String username) throws NullPointerException, UsernameException {
         if(username == null) throw new NullPointerException();
-        if(users.containsKey(username)) throw new UsernameException("Username" + username + "already exists");
-        if(!username.matches("[a-zA-Z_0-9]{5,15}")) throw new UsernameException("Username" + username + "illegal format");
+        if(users.containsKey(username)) throw new UsernameException("Username " + username + " already exists");
+        if(!username.matches("[a-zA-Z_0-9]{5,15}")) throw new UsernameException("Username " + username + " illegal format");
 
         users.put(username, null);
 
@@ -48,9 +49,9 @@ public class MicroBlog implements SocialNetwork {
     // Aggiunge ad username un follower
     public void addFollower(String username, String follower) throws NullPointerException, UsernameException, FollowerException {
         if(username == null || follower == null) throw new NullPointerException();
-        if(!users.containsKey(username)) throw new UsernameException("Username" + username + "not exists");
+        if(!users.containsKey(username)) throw new UsernameException("Username " + username + " not exists");
         if(username.equals(follower)) throw new FollowerException("You can't follow yourself");
-        if(!users.containsKey(follower)) throw new FollowerException("Follower" + follower + "not exists");
+        if(!users.containsKey(follower)) throw new FollowerException("Follower " + follower + " not exists");
 
         Set<String> set_following;
 
@@ -77,16 +78,17 @@ public class MicroBlog implements SocialNetwork {
     // Aggiunge un post creato da username
     public void addPost(String username, String text) throws NullPointerException, UsernameException, LikeException, MentionException, PostException {
         if(username == null || text == null) throw new NullPointerException();
-        if(!users.containsKey(username)) throw new UsernameException("Username" + username + "not exists");
-        if(text.isEmpty()) throw new PostException("The text of" + username + "is empty");
-        if(text.length() > 140) throw new PostException("The text of" + username + "is too long (max 140 characters)");
+        if(!users.containsKey(username)) throw new UsernameException("Username " + username + " not exists");
+        if(text.isEmpty()) throw new PostException("The text of " + username + " is empty");
+        if(text.length() > 140) throw new PostException("The text of " + username + " is too long (max 140 characters)");
 
         if(text.matches("#LIKE_[0-9]+"))
         {
             int id = Integer.parseInt(text.substring(6));
 
-            if(!feed.containsKey(id)) throw new LikeException("Post" + id + "not exists");
-            if(!users.get(username).contains(feed.get(id).getAuthor())) throw new LikeException("You can't like" + id);
+            if(!feed.containsKey(id)) throw new LikeException("Post " + id + " not exists");
+            if(feed.get(id).getText().matches("#LIKE_[0-9]+")) throw new LikeException("Post " + id + " is a like");
+            if(!users.get(username).contains(feed.get(id).getAuthor())) throw new LikeException("You can't like " + id);
         }
         else
         {
@@ -147,7 +149,7 @@ public class MicroBlog implements SocialNetwork {
     // il cui nome è dato dal parametro username
     public List<Post> writtenBy(String username) throws NullPointerException, UsernameException {
         if(username == null) throw new NullPointerException();
-        if(!users.containsKey(username)) throw new UsernameException("Username" + username + "not exists");
+        if(!users.containsKey(username)) throw new UsernameException("Username " + username + " not exists");
 
         List<Post> messages = new ArrayList<Post>();
 
@@ -174,38 +176,19 @@ public class MicroBlog implements SocialNetwork {
         if(words.isEmpty() || words.contains("")) throw new IllegalArgumentException();
 
         List<Post> messages = new ArrayList<Post>();
-        List<Pattern> p = new ArrayList<Pattern>();
+        StringBuilder regex = new StringBuilder();
 
         for(String w : words)
         {
-            p.add(Pattern.compile(w));
+            regex.append(w).append("|");
         }
 
-        Matcher m;
-        int i;
-        boolean b;
+        Matcher words_list = Pattern.compile(regex.deleteCharAt(regex.length()-1).toString()).matcher("");
 
         for(Map.Entry<Integer, Post> entry : feed.entrySet())
         {
-            i = 0;
-            b = true;
-
-            while(i < p.size() && b)
-            {
-                m = p.get(i).matcher(entry.getValue().getAuthor());
-
-                if(m.find())
-                {
-                    b = false;
-                }
-
-                i++;
-            }
-
-            if(!b)
-            {
-                messages.add(entry.getValue());
-            }
+            words_list.reset(entry.getValue().getText());
+            if(words_list.find()) messages.add(entry.getValue());
         }
 
         return messages;
