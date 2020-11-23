@@ -216,14 +216,30 @@ public class MicroBlog implements SocialNetwork {
      */
 
     // Restituisce l’insieme degli utenti menzionati (inclusi) nella lista di post
-    public static Set<String> getMentionedUsers(List<Post> ps){
-        return null;
+    public static Set<String> getMentionedUsers(List<Post> ps) throws NullPointerException, IllegalArgumentException {
+        if(ps == null || ps.contains(null)) throw new NullPointerException();
+        if(ps.isEmpty()) throw new IllegalArgumentException();
+
+        Set<String> users = new HashSet<String>();
+        Pattern mention = Pattern.compile("@([a-zA-Z_0-9]{5,15})");
+        Matcher m = mention.matcher("");
+        
+        for(Post post : ps)
+        {
+            m.reset(post.getText());
+
+            while(m.find())
+            {
+                users.add(m.group(1));
+            }
+        }
+
+        return users;
     }
     /*
-       @REQUIRES :
-       @THROWS :
-       @MODIFIES :
-       @EFFECTS :
+       @REQUIRES : ps != null && ps.isEmpty() == false && ps.contains(null) == false
+       @THROWS : NullPointerException, IllegalArgumentException
+       @RETURN : Set of users | for all i : 0 <= i < Set.size() ==> (EXISTS post in ps | (ps.getText().contains("@Set.get(i)") == true))
      */
 
     // Restituisce la lista dei post effettuati dall’utente
