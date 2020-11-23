@@ -228,13 +228,27 @@ public class MicroBlog implements SocialNetwork {
 
     // Restituisce la lista dei post effettuati dall’utente
     // il cui nome è dato dal parametro username presenti nella lista ps
-    public static List<Post> writtenBy(List<Post> ps, String username) {
-        return null;
+    public static List<Post> writtenBy(List<Post> ps, String username) throws NullPointerException, UsernameException, IllegalArgumentException {
+        if(ps == null || ps.contains(null) || username == null) throw new NullPointerException();
+        if(ps.isEmpty()) throw new IllegalArgumentException();
+        if(!username.matches("[a-zA-Z_0-9]{5,15}")) throw new UsernameException("Username " + username + " illegal format");
+
+        List<Post> messages = new ArrayList<Post>();
+
+        for(Post post : ps)
+        {
+            if(post.getAuthor().equals(username))
+            {
+                messages.add(post);
+            }
+        }
+
+        return messages;
     }
     /*
-       @REQUIRES :
-       @THROWS :
-       @MODIFIES :
-       @EFFECTS :
+       @REQUIRES : ps != null && username != null && ps.isEmpty() == false && ps.contains(null) == false
+                   && username.matches("[a-zA-Z_0-9]{5,15}") == true
+       @THROWS : NullPointerException, UsernameException, IllegalArgumentException
+       @RETURN : List of posts in ps | for all i : 0 <= i < List.size() ==> (List.get(i).getAuthor().equals(username) == true)
      */
 }
