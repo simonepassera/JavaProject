@@ -204,15 +204,108 @@ public class MicroBlog implements SocialNetwork {
     // ** STATIC METHODS **
     // ********************
 
-    // Restituisce la rete sociale derivata dalla lista di post appartenenti al
-    // social network, analizzando i mi piace e le persone menzionate
-    public static Map<String, Set<String>> guessFollowers(List<Post> ps){
-        return null;
+    // Restituisce la rete sociale derivata dalla lista di post (parametro del metodo),
+    // analizzando i mi piace e le persone menzionate
+    public static Map<String, Set<String>> guessFollowers(List<Post> ps) throws NullPointerException, IllegalArgumentException {
+        if(ps == null || ps.contains(null)) throw new NullPointerException();
+        if(ps.isEmpty()) throw new IllegalArgumentException();
+
+        Map<String, Set<String>> network = new HashMap<String, Set<String>>();
+        Map<String, Set<Integer>> like = new HashMap<String, Set<Integer>>();
+        Map<Integer, String> messages = new TreeMap<Integer, String>();
+
+        Pattern mention = Pattern.compile("@([a-zA-Z_0-9]{5,15})");
+        Matcher m = mention.matcher("");
+
+        int id;
+        String text;
+        String author;
+
+        Set<String> mentioned;
+        Set<String> old_following;
+        Set<Integer> new_like;
+
+        for(Post post : ps)
+        {
+            author = post.getAuthor();
+            text = post.getText();
+
+            if(text.matches("#LIKE_[0-9]+"))
+            {
+                id = Integer.parseInt(text.substring(6));
+
+                if(like.containsKey(author))
+                {
+                    new_like = like.get(author);
+                }
+                else
+                {
+                    new_like = new HashSet<Integer>();
+                }
+
+                new_like.add(id);
+                like.put(author, new_like);
+            }
+            else
+            {
+                messages.put(post.getId(), author);
+                mentioned = new HashSet<String>();
+                m.reset(text);
+
+                while(m.find())
+                {
+                    if(!m.group(1).equals(author)) mentioned.add(m.group(1));
+                }
+
+                if(network.containsKey(author))
+                {
+                    old_following = network.get(author);
+                    old_following.addAll(mentioned);
+                    network.put(author, old_following);
+                }
+                else
+                {
+                    network.put(author, mentioned);
+                }
+            }
+        }
+
+        for(Map.Entry<String, Set<Integer>> l : like.entrySet())
+        {
+            for(Integer id_ps : l.getValue())
+            {
+                if(messages.containsKey(id_ps))
+                {
+                    if(!messages.get(id_ps).equals(l.getKey()))
+                    {
+                        if(network.containsKey(l.getKey()))
+                        {
+                            old_following = network.get(l.getKey());
+                        }
+                        else
+                        {
+                            old_following = new HashSet<String>();
+                        }
+
+                        old_following.add(messages.get(id_ps));
+                        network.put(l.getKey(), old_following);
+                    }
+                }
+            }
+        }
+
+        return network;
     }
     /*
-       @REQUIRES : ps != null && POSTS.containsAll(ps)
+       @REQUIRES : ps != null && ps.isEmpty() == false && ps.contains(null) == false
        @THROWS : NullPointerException, IllegalArgumentException
-       @RETURN : Sottoinsieme di USERS
+       @RETURN : Map of <user, following> | for all keys in Map ==>
+                 (Map.get(key) is Set of following | for all i : 0 <= i < Set.size() ==>
+                 ((EXISTS post in ps | (post.getAuthor().equals(key) == true && post.getText().contains("@Set.get(i)") == true))
+                  ||
+                  (EXISTS post1, post2 in ps | (post1.getAuthor().equals(key) == true && post1.getText().matches("#LIKE_[0-9]+") == true
+                                                 && post2.getText().matches("#LIKE_[0-9]+") == false && post2.getAuthor().equals(key) == false
+                                                 && post2.getId().equals(Integer.parseInt("[0-9]+")) == true))))
      */
 
     // Restituisce l’insieme degli utenti menzionati (inclusi) nella lista di post
@@ -223,7 +316,7 @@ public class MicroBlog implements SocialNetwork {
         Set<String> users = new HashSet<String>();
         Pattern mention = Pattern.compile("@([a-zA-Z_0-9]{5,15})");
         Matcher m = mention.matcher("");
-        
+
         for(Post post : ps)
         {
             m.reset(post.getText());
@@ -239,7 +332,7 @@ public class MicroBlog implements SocialNetwork {
     /*
        @REQUIRES : ps != null && ps.isEmpty() == false && ps.contains(null) == false
        @THROWS : NullPointerException, IllegalArgumentException
-       @RETURN : Set of users | for all i : 0 <= i < Set.size() ==> (EXISTS post in ps | (ps.getText().contains("@Set.get(i)") == true))
+       @RETURN : Set of users | for all i : 0 <= i < Set.size() ==> (EXISTS post in ps | (post.getText().contains("@Set.get(i)") == true))
      */
 
     // Restituisce la lista dei post effettuati dall’utente
@@ -267,4 +360,8 @@ public class MicroBlog implements SocialNetwork {
        @THROWS : NullPointerException, UsernameException, IllegalArgumentException
        @RETURN : List of posts in ps | for all i : 0 <= i < List.size() ==> (List.get(i).getAuthor().equals(username) == true)
      */
+
+    // ********************
+    // *** TEST METHODS ***
+    // ********************
 }

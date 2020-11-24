@@ -81,8 +81,4 @@ public interface SocialNetwork {
        @THROWS : NullPointerException, IllegalArgumentException
        @RETURN : List of POSTS | for all i : 0 <= i < List.size() ==> (EXISTS string in words | (List.get(i).getText() contains string))
      */
-
-    // ********************
-    // *** TEST METHODS ***
-    // ********************
 }
