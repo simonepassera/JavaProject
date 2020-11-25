@@ -36,7 +36,7 @@ public class Message implements Post {
        @REQUIRES : author != null && text != null && timestamp != null
        @THROWS : NullPointerException, PostException
        @MODIFIES : id, author, text, timestamp
-       @EFFECTS :  Initialize id, author, text, timestamp
+       @EFFECTS :  Initialize id, author, text, timestamp inferred from parameters
      */
 
     // Restituisce l' identificatore univoco del post

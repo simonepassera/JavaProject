@@ -40,6 +40,26 @@ public class MicroBlog implements SocialNetwork {
        @EFFECTS : Initialize users, followers, feed, mentioned
      */
 
+    // Crea un nuovo MicroBlog inizializzato con la lista di post ps (parametro del costruttore)
+    public MicroBlog(List<Post> ps)
+    {
+
+    }
+    /*
+       @REQUIRES : ps != null && ps.isEmpty() == false && ps.contains(null) == false
+                   && for all i : 0 <= i < ps.size() ==>
+                                (((ps.get(i).getText().contains("@User") == true) ==> (ps.get(i).getAuthor().equals("User") == false))
+                                && ps.get(i).getTimestamp().before(current_time) == true
+                                && ((ps.get(i).getText().matches("#LIKE_[0-9]+") == true) ==>
+                                             (EXISTS post in ps | post.getText().matches("#LIKE_[0-9]+") == false
+                                                                  && post.getAuthor().equals(ps.get(i).getAuthor()) == false
+                                                                  && post.getId().equals(Integer.parseInt("[0-9]+")) == true
+                                                                  && ps.get(i).getTimestamp().after(post.getTimestamp()) == true)))
+       @THROWS : NullPointerException, IllegalArgumentException, UsernameException, FollowerException, MentionException, LikeException
+       @MODIFIES : users, followers, feed, mentioned
+       @EFFECTS : Initialize users, followers, feed, mentioned inferred from ps list
+     */
+
     // Crea un nuovo utente nella rete sociale, restituisce il proprio username
     public String addUser(String username) throws NullPointerException, UsernameException {
         if(username == null) throw new NullPointerException();
@@ -288,7 +308,7 @@ public class MicroBlog implements SocialNetwork {
 
                 if(messages.containsKey(id))
                 {
-                    if(!messages.get(id).getAuthor().equals(entry.getKey()) && like_post.getTimestamp().compareTo(messages.get(id).getTimestamp()) > 0)
+                    if(!messages.get(id).getAuthor().equals(entry.getKey()) && like_post.getTimestamp().after(messages.get(id).getTimestamp()))
                     {
                         if(network.containsKey(entry.getKey()))
                         {
@@ -318,7 +338,7 @@ public class MicroBlog implements SocialNetwork {
                   (EXISTS post1, post2 in ps | (post1.getAuthor().equals(key) == true && post1.getText().matches("#LIKE_[0-9]+") == true
                                                  && post2.getText().matches("#LIKE_[0-9]+") == false && post2.getAuthor().equals(key) == false
                                                  && post2.getId().equals(Integer.parseInt("[0-9]+")) == true
-                                                 && post1.getTimestamp().compareTo(post2.getTimestamp()) > 0))))
+                                                 && post1.getTimestamp().after(post2.getTimestamp()) == true))))
      */
 
     // Restituisce l’insieme degli utenti menzionati (inclusi) nella lista di post
