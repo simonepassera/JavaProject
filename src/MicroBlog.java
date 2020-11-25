@@ -211,19 +211,19 @@ public class MicroBlog implements SocialNetwork {
         if(ps.isEmpty()) throw new IllegalArgumentException();
 
         Map<String, Set<String>> network = new HashMap<String, Set<String>>();
-        Map<String, Set<Integer>> like = new HashMap<String, Set<Integer>>();
-        Map<Integer, String> messages = new TreeMap<Integer, String>();
+        Map<String, Set<Post>> like = new HashMap<String, Set<Post>>();
+        Map<Integer, Post> messages = new HashMap<Integer, Post>();
 
         Pattern mention = Pattern.compile("@([a-zA-Z_0-9]{5,15})");
         Matcher m = mention.matcher("");
 
-        int id;
+        Integer id;
         String text;
         String author;
 
-        Set<String> mentioned;
-        Set<String> old_following;
-        Set<Integer> new_like;
+        Set<String> set_mentioned;
+        Set<String> set_following;
+        Set<Post> set_like;
 
         for(Post post : ps)
         {
@@ -232,63 +232,63 @@ public class MicroBlog implements SocialNetwork {
 
             if(text.matches("#LIKE_[0-9]+"))
             {
-                id = Integer.parseInt(text.substring(6));
-
                 if(like.containsKey(author))
                 {
-                    new_like = like.get(author);
+                    set_like = like.get(author);
                 }
                 else
                 {
-                    new_like = new HashSet<Integer>();
+                    set_like = new HashSet<Post>();
                 }
 
-                new_like.add(id);
-                like.put(author, new_like);
+                set_like.add(post);
+                like.put(author, set_like);
             }
             else
             {
-                messages.put(post.getId(), author);
-                mentioned = new HashSet<String>();
+                messages.put(post.getId(), post);
+                set_mentioned = new HashSet<String>();
                 m.reset(text);
 
                 while(m.find())
                 {
-                    if(!m.group(1).equals(author)) mentioned.add(m.group(1));
+                    if(!m.group(1).equals(author)) set_mentioned.add(m.group(1));
                 }
 
                 if(network.containsKey(author))
                 {
-                    old_following = network.get(author);
-                    old_following.addAll(mentioned);
-                    network.put(author, old_following);
+                    set_following = network.get(author);
+                    set_following.addAll(set_mentioned);
+                    network.put(author, set_following);
                 }
                 else
                 {
-                    network.put(author, mentioned);
+                    network.put(author, set_mentioned);
                 }
             }
         }
 
-        for(Map.Entry<String, Set<Integer>> l : like.entrySet())
+        for(Map.Entry<String, Set<Post>> entry : like.entrySet())
         {
-            for(Integer id_ps : l.getValue())
+            for(Post like_post : entry.getValue())
             {
-                if(messages.containsKey(id_ps))
+                id = Integer.parseInt(like_post.getText().substring(6));
+
+                if(messages.containsKey(id))
                 {
-                    if(!messages.get(id_ps).equals(l.getKey()))
+                    if(!messages.get(id).getAuthor().equals(entry.getKey()) && like_post.getTimestamp().compareTo(messages.get(id).getTimestamp()) > 0)
                     {
-                        if(network.containsKey(l.getKey()))
+                        if(network.containsKey(entry.getKey()))
                         {
-                            old_following = network.get(l.getKey());
+                            set_following = network.get(entry.getKey());
                         }
                         else
                         {
-                            old_following = new HashSet<String>();
+                            set_following = new HashSet<String>();
                         }
 
-                        old_following.add(messages.get(id_ps));
-                        network.put(l.getKey(), old_following);
+                        set_following.add(messages.get(id).getAuthor());
+                        network.put(entry.getKey(), set_following);
                     }
                 }
             }
@@ -305,7 +305,8 @@ public class MicroBlog implements SocialNetwork {
                   ||
                   (EXISTS post1, post2 in ps | (post1.getAuthor().equals(key) == true && post1.getText().matches("#LIKE_[0-9]+") == true
                                                  && post2.getText().matches("#LIKE_[0-9]+") == false && post2.getAuthor().equals(key) == false
-                                                 && post2.getId().equals(Integer.parseInt("[0-9]+")) == true))))
+                                                 && post2.getId().equals(Integer.parseInt("[0-9]+")) == true
+                                                 && post1.getTimestamp().compareTo(post2.getTimestamp()) > 0))))
      */
 
     // Restituisce l’insieme degli utenti menzionati (inclusi) nella lista di post
