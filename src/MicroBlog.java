@@ -28,6 +28,18 @@ public class MicroBlog implements SocialNetwork {
     private Map<Integer, Post> feed;
     private Set<String> mentioned;
 
+    // Crea un nuovo MicroBlog vuoto
+    public MicroBlog() {
+        users = new HashMap<String, Set<String>>();
+        followers = new HashMap<String, Integer>();
+        feed = new HashMap<Integer, Post>();
+        mentioned = new HashSet<String>();
+    }
+    /*
+       @MODIFIES : users, followers, feed, mentioned
+       @EFFECTS : Initialize users, followers, feed, mentioned
+     */
+
     // Crea un nuovo utente nella rete sociale, restituisce il proprio username
     public String addUser(String username) throws NullPointerException, UsernameException {
         if(username == null) throw new NullPointerException();

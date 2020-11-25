@@ -20,14 +20,14 @@ public class Message implements Post {
     private final String text;
     private final Timestamp timestamp;
 
-    // Crea un messaggio
+    // Crea un nuovo messaggio, con author, text e timestamp (parametri del costruttore)
     public Message(String author, String text, Timestamp timestamp) throws NullPointerException, PostException {
         if(author == null || text == null || timestamp == null) throw new NullPointerException();
         if(!author.matches("[a-zA-Z_0-9]{5,15}")) throw new PostException("Author " + author + " illegal format");
         if(text.isEmpty()) throw new PostException("The text of " + author + " is empty");
         if(text.length() > 140) throw new PostException("The text of " + author + " is too long (max 140 characters)");
 
-        this.id = ++id_generator;
+        this.id = id_generator++;
         this.author = author;
         this.text = text;
         this.timestamp = (Timestamp) timestamp.clone();
