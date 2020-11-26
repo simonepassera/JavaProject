@@ -41,21 +41,138 @@ public class MicroBlog implements SocialNetwork {
      */
 
     // Crea un nuovo MicroBlog inizializzato con la lista di post ps (parametro del costruttore)
-    public MicroBlog(List<Post> ps)
+    public MicroBlog(List<Post> ps) throws NullPointerException, IllegalArgumentException, MentionException, LikeException
     {
+        this();
 
+        if(ps == null || ps.contains(null)) throw new NullPointerException();
+        if(ps.isEmpty()) throw new IllegalArgumentException("List is empty");
+
+        Timestamp current_time = new Timestamp(System.currentTimeMillis());
+
+        Map<String, Set<Post>> like = new HashMap<String, Set<Post>>();
+        Map<Integer, Post> messages = new HashMap<Integer, Post>();
+
+        Pattern mention = Pattern.compile("@([a-zA-Z_0-9]{5,15})");
+        Matcher m = mention.matcher("");
+
+        String text;
+        String author;
+
+        Set<String> set_mentioned;
+        Set<String> set_following;
+        Set<Post> set_like;
+
+        for(Post post : ps)
+        {
+            if(post.getTimestamp().after(current_time)) throw new IllegalArgumentException("Timestamp of post " + post.getId() + "is after current time");
+
+            if(!feed.containsKey(post.getId()))
+            {
+                author = post.getAuthor();
+                text = post.getText();
+
+                if(text.matches("#LIKE_[0-9]+"))
+                {
+                    if(like.containsKey(author))
+                    {
+                        set_like = like.get(author);
+                    }
+                    else
+                    {
+                        set_like = new HashSet<Post>();
+                    }
+
+                    set_like.add(post);
+                    like.put(author, set_like);
+                }
+                else
+                {
+                    messages.put(post.getId(), post);
+                    set_mentioned = new HashSet<String>();
+                    m.reset(text);
+
+                    while(m.find())
+                    {
+                        if(!m.group(1).equals(author)) throw new MentionException("Illegal mention");
+                        set_mentioned.add(m.group(1));
+                    }
+
+                    this.mentioned.addAll(set_mentioned);
+
+                    if(this.users.containsKey(author))
+                    {
+                        set_following = this.users.get(author);
+                        set_following.addAll(set_mentioned);
+                        this.users.put(author, set_following);
+                    }
+                    else
+                    {
+                        this.users.put(author, set_mentioned);
+                    }
+                }
+
+                feed.put(post.getId(), post);
+            }
+        }
+
+        Integer id;
+
+        for(Map.Entry<String, Set<Post>> entry : like.entrySet())
+        {
+            for(Post like_post : entry.getValue())
+            {
+                id = Integer.parseInt(like_post.getText().substring(6));
+
+                if(!messages.containsKey(id)) throw new LikeException("Liked post does not exist : id =" + id);
+                if(!messages.get(id).getAuthor().equals(entry.getKey())) throw new LikeException("Illegal like : id =" + like_post.getId());
+                if(like_post.getTimestamp().before(messages.get(id).getTimestamp()))  throw new LikeException("Timestamp of like " + like_post.getId() + "is before the timestamp of liked post " + id);
+
+                if(this.users.containsKey(entry.getKey()))
+                {
+                    set_following = this.users.get(entry.getKey());
+                }
+                else
+                {
+                    set_following = new HashSet<String>();
+                }
+
+                set_following.add(messages.get(id).getAuthor());
+                this.users.put(entry.getKey(), set_following);
+            }
+        }
+
+        Integer num;
+
+        for(Map.Entry<String, Set<String>> entry : this.users.entrySet())
+        {
+            for(String followed : entry.getValue())
+            {
+                if(this.followers.containsKey(followed))
+                {
+                    num = this.followers.get(followed);
+                    num += 1;
+                }
+                else
+                {
+                    num = 1;
+                }
+
+                this.followers.put(followed, num);
+            }
+        }
     }
     /*
        @REQUIRES : ps != null && ps.isEmpty() == false && ps.contains(null) == false
                    && for all i : 0 <= i < ps.size() ==>
                                 (((ps.get(i).getText().contains("@User") == true) ==> (ps.get(i).getAuthor().equals("User") == false))
-                                && ps.get(i).getTimestamp().before(current_time) == true
+                                && (ps.get(i).getTimestamp().before(current_time) == true)
                                 && ((ps.get(i).getText().matches("#LIKE_[0-9]+") == true) ==>
                                              (EXISTS post in ps | post.getText().matches("#LIKE_[0-9]+") == false
                                                                   && post.getAuthor().equals(ps.get(i).getAuthor()) == false
                                                                   && post.getId().equals(Integer.parseInt("[0-9]+")) == true
                                                                   && ps.get(i).getTimestamp().after(post.getTimestamp()) == true)))
-       @THROWS : NullPointerException, IllegalArgumentException, UsernameException, FollowerException, MentionException, LikeException
+       @THROWS : NullPointerException, IllegalArgumentException, MentionException, LikeException
        @MODIFIES : users, followers, feed, mentioned
        @EFFECTS : Initialize users, followers, feed, mentioned inferred from ps list
      */
@@ -67,14 +184,15 @@ public class MicroBlog implements SocialNetwork {
         if(!username.matches("[a-zA-Z_0-9]{5,15}")) throw new UsernameException("Username " + username + " illegal format");
 
         users.put(username, null);
+        followers.put(username, 0);
 
         return username;
     }
     /*
        @REQUIRES : username != null && users.containsKey(username) == false
        @THROWS : NullPointerException, UsernameException
-       @MODIFIES : users
-       @EFFECTS : users.put(username, null)
+       @MODIFIES : users, followers
+       @EFFECTS : users.put(username, null) && followers.put(username, 0)
        @RETURN : username
      */
 
@@ -205,7 +323,8 @@ public class MicroBlog implements SocialNetwork {
     // almeno una delle parole presenti nella lista delle parole argomento del metodo
     public List<Post> containing(List<String> words) throws NullPointerException, IllegalArgumentException {
         if(words == null || words.contains(null)) throw new NullPointerException();
-        if(words.isEmpty() || words.contains("")) throw new IllegalArgumentException();
+        if(words.isEmpty()) throw new IllegalArgumentException("List is empty");
+        if(words.contains("")) throw new IllegalArgumentException("List contains empty string");
 
         List<Post> messages = new ArrayList<Post>();
         StringBuilder regex = new StringBuilder();
@@ -240,7 +359,7 @@ public class MicroBlog implements SocialNetwork {
     // analizzando i mi piace e le persone menzionate
     public static Map<String, Set<String>> guessFollowers(List<Post> ps) throws NullPointerException, IllegalArgumentException {
         if(ps == null || ps.contains(null)) throw new NullPointerException();
-        if(ps.isEmpty()) throw new IllegalArgumentException();
+        if(ps.isEmpty()) throw new IllegalArgumentException("List is empty");
 
         Map<String, Set<String>> network = new HashMap<String, Set<String>>();
         Map<String, Set<Post>> like = new HashMap<String, Set<Post>>();
@@ -344,7 +463,7 @@ public class MicroBlog implements SocialNetwork {
     // Restituisce l’insieme degli utenti menzionati (inclusi) nella lista di post
     public static Set<String> getMentionedUsers(List<Post> ps) throws NullPointerException, IllegalArgumentException {
         if(ps == null || ps.contains(null)) throw new NullPointerException();
-        if(ps.isEmpty()) throw new IllegalArgumentException();
+        if(ps.isEmpty()) throw new IllegalArgumentException("List is empty");
 
         Set<String> users = new HashSet<String>();
         Pattern mention = Pattern.compile("@([a-zA-Z_0-9]{5,15})");
@@ -372,7 +491,7 @@ public class MicroBlog implements SocialNetwork {
     // il cui nome è dato dal parametro username presenti nella lista ps
     public static List<Post> writtenBy(List<Post> ps, String username) throws NullPointerException, UsernameException, IllegalArgumentException {
         if(ps == null || ps.contains(null) || username == null) throw new NullPointerException();
-        if(ps.isEmpty()) throw new IllegalArgumentException();
+        if(ps.isEmpty()) throw new IllegalArgumentException("List is empty");
         if(!username.matches("[a-zA-Z_0-9]{5,15}")) throw new UsernameException("Username " + username + " illegal format");
 
         List<Post> messages = new ArrayList<Post>();
