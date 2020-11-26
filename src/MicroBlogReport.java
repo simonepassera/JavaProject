@@ -1,4 +1,4 @@
-public class MicroBlogReport extends MicroBlog{
+public class MicroBlogReport extends MicroBlog implements SocialNetworkReport {
     /*
         Representation Invariant :
 
