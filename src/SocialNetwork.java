@@ -14,8 +14,8 @@ public interface SocialNetwork {
                    con un post in cui il campo di testo è formato da "#LIKE_id" dove id è l' identificatore univoco del post.
 
         Typical element : <USERS, POSTS>
-                          USERS insieme di coppie <utente, insieme delle persone da lui seguite>
-                          POSTS insieme di post <id, utente, testo, timestamp>
+                          USERS -> insieme di coppie <utente, insieme delle persone da lui seguite>
+                          POSTS -> insieme di post <id, utente, testo, timestamp>
      */
 
     // Crea un nuovo utente nella rete sociale, restituisce il proprio username
