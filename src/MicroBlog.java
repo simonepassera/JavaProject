@@ -45,7 +45,8 @@ public class MicroBlog implements SocialNetwork {
     {
         this();
 
-        if(ps == null || ps.contains(null)) throw new NullPointerException();
+        if(ps == null) throw new NullPointerException("ps == null");
+        if(ps.contains(null)) throw new NullPointerException("ps.contains(null)");
         if(ps.isEmpty()) throw new IllegalArgumentException("List is empty");
 
         Timestamp current_time = new Timestamp(System.currentTimeMillis());
@@ -65,7 +66,7 @@ public class MicroBlog implements SocialNetwork {
 
         for(Post post : ps)
         {
-            if(post.getTimestamp().after(current_time)) throw new IllegalArgumentException("Timestamp of post " + post.getId() + "is after current time");
+            if(post.getTimestamp().after(current_time)) throw new IllegalArgumentException("Timestamp of post " + post.getId() + " is after current time");
 
             if(!feed.containsKey(post.getId()))
             {
@@ -94,7 +95,7 @@ public class MicroBlog implements SocialNetwork {
 
                     while(m.find())
                     {
-                        if(!m.group(1).equals(author)) throw new MentionException("Illegal mention");
+                        if(m.group(1).equals(author)) throw new MentionException("Illegal mention");
                         set_mentioned.add(m.group(1));
                     }
 
@@ -125,8 +126,8 @@ public class MicroBlog implements SocialNetwork {
                 id = Integer.parseInt(like_post.getText().substring(6));
 
                 if(!messages.containsKey(id)) throw new LikeException("Liked post does not exist : id =" + id);
-                if(!messages.get(id).getAuthor().equals(entry.getKey())) throw new LikeException("Illegal like : id =" + like_post.getId());
-                if(like_post.getTimestamp().before(messages.get(id).getTimestamp()))  throw new LikeException("Timestamp of like " + like_post.getId() + "is before the timestamp of liked post " + id);
+                if(messages.get(id).getAuthor().equals(entry.getKey())) throw new LikeException("Illegal like : id =" + like_post.getId());
+                if(like_post.getTimestamp().before(messages.get(id).getTimestamp()))  throw new LikeException("Timestamp of like " + like_post.getId() + " is before the timestamp of liked post " + id);
 
                 if(this.users.containsKey(entry.getKey()))
                 {
@@ -179,7 +180,7 @@ public class MicroBlog implements SocialNetwork {
 
     // Crea un nuovo utente nella rete sociale, restituisce il proprio username
     public String addUser(String username) throws NullPointerException, UsernameException {
-        if(username == null) throw new NullPointerException();
+        if(username == null) throw new NullPointerException("username == null");
         if(users.containsKey(username)) throw new UsernameException("Username " + username + " already exists");
         if(!username.matches("[a-zA-Z_0-9]{5,15}")) throw new UsernameException("Username " + username + " illegal format");
 
@@ -198,7 +199,7 @@ public class MicroBlog implements SocialNetwork {
 
     // Aggiunge ad username un follower
     public void addFollower(String username, String follower) throws NullPointerException, UsernameException, FollowerException {
-        if(username == null || follower == null) throw new NullPointerException();
+        if(username == null || follower == null) throw new NullPointerException("One or more parameters are null");
         if(!users.containsKey(username)) throw new UsernameException("Username " + username + " not exists");
         if(username.equals(follower)) throw new FollowerException("You can't follow yourself");
         if(!users.containsKey(follower)) throw new FollowerException("Follower " + follower + " not exists");
@@ -227,7 +228,7 @@ public class MicroBlog implements SocialNetwork {
 
     // Aggiunge un post creato da username
     public void addPost(String username, String text) throws NullPointerException, UsernameException, LikeException, MentionException, PostException {
-        if(username == null || text == null) throw new NullPointerException();
+        if(username == null || text == null) throw new NullPointerException("One or more parameters are null");
         if(!users.containsKey(username)) throw new UsernameException("Username " + username + " not exists");
         if(text.isEmpty()) throw new PostException("The text of " + username + " is empty");
         if(text.length() > 140) throw new PostException("The text of " + username + " is too long (max 140 characters)");
