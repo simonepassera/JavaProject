@@ -23,10 +23,10 @@ public class MicroBlog implements SocialNetwork {
                                AF(mentioned) = Sottoinsieme di utenti, che sono stati menzionati nei post
      */
 
-    private Map<String, Set<String>> users;
+    protected Map<String, Set<String>> users;
     private Map<String, Integer> followers;
-    private Map<Integer, Post> feed;
-    private Set<String> mentioned;
+    protected Map<Integer, Post> feed;
+    protected Set<String> mentioned;
 
     // Crea un nuovo MicroBlog vuoto
     public MicroBlog() {
