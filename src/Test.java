@@ -9,7 +9,7 @@ public class Test {
 
         System.out.println("\n-- CONSTRUCTOR --");
 
-        System.out.print("Post post = new Message(author:null, text:null, timestamp:null) -> ");
+        System.out.print("\nPost post = new Message(author:null, text:null, timestamp:null) -> ");
         try {
             Post post = new Message(null, null, null);
         } catch(Exception e) { System.out.println(e.getMessage()); }
@@ -35,7 +35,7 @@ public class Test {
 
         System.out.println("\n-- CONSTRUCTOR --");
 
-        System.out.print("SocialNetwork sn = new MicroBlog(ps:null) -> ");
+        System.out.print("\nSocialNetwork sn = new MicroBlog(ps:null) -> ");
         try {
             SocialNetwork sn = new MicroBlog(null);
         } catch(Exception e) { System.out.println(e.getMessage()); }
@@ -101,7 +101,7 @@ public class Test {
 
         System.out.println("\n-- addUser --");
 
-        System.out.print("SocialNetwork sn = new MicroBlog();\n" + "sn.addUser(username:null) -> ");
+        System.out.print("\nSocialNetwork sn = new MicroBlog();\n" + "sn.addUser(username:null) -> ");
         try {
             SocialNetwork sn = new MicroBlog();
             sn.addUser(null);
@@ -122,7 +122,7 @@ public class Test {
 
         System.out.println("\n-- addFollower --");
 
-        System.out.print("SocialNetwork sn = new MicroBlog();\n" + "sn.addFollower(username:\"Fabio\", follower:null) -> ");
+        System.out.print("\nSocialNetwork sn = new MicroBlog();\n" + "sn.addFollower(username:\"Fabio\", follower:null) -> ");
         try {
             SocialNetwork sn = new MicroBlog();
             sn.addFollower("Fabio", null);
@@ -150,7 +150,7 @@ public class Test {
 
         System.out.println("\n-- addPost --");
 
-        System.out.print("SocialNetwork sn = new MicroBlog();\n" + "sn.addPost(username:\"Fabio\", text:null) -> ");
+        System.out.print("\nSocialNetwork sn = new MicroBlog();\n" + "sn.addPost(username:\"Fabio\", text:null) -> ");
         try {
             SocialNetwork sn = new MicroBlog();
             sn.addPost("Fabio", null);
@@ -230,6 +230,20 @@ public class Test {
             sn.addFollower("Aldo58", "Giacomo");
             sn.addFollower("Giacomo", "Aldo58");
             for(String name : sn.influencers()) System.out.print(name + " ");
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.println("\n\n-- getMentionedUsers --");
+
+        System.out.print("\nSocialNetwork sn = new MicroBlog();\n" + "sn.addUser(\"Simone\");\n" + "sn.addUser(\"Francesco\");\n" + "sn.addUser(\"Giacomo\");\n" + "sn.addFollower(\"Francesco\", \"Simone\");\n" + "sn.addFollower(\"Giacomo\", \"Simone\");\n" + "sn.addPost(\"Simone\", \"Testo del post di simone dove menziono @Giacomo e @Francesco\");\n" + "for(String name : sn.getMentionedUsers()) System.out.print(name + \" \") -> ");
+        try {
+            SocialNetwork sn = new MicroBlog();
+            sn.addUser("Simone");
+            sn.addUser("Francesco");
+            sn.addUser("Giacomo");
+            sn.addFollower("Francesco", "Simone");
+            sn.addFollower("Giacomo", "Simone");
+            sn.addPost("Simone", "Testo del post di simone dove menziono @Giacomo e @Francesco");
+            for(String name : sn.getMentionedUsers()) System.out.print(name + " ");
         } catch(Exception e) { System.out.println(e.getMessage()); }
     }
 }
