@@ -412,5 +412,152 @@ public class Test {
             ps.add(p1); ps.add(p2); ps.add(p3);
             Message.printPost(MicroBlog.writtenBy(ps, "Simone"));
         } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.println("\n\n******************************");
+        System.out.println("** Test SocialNetworkReport **");
+        System.out.println("******************************");
+
+        System.out.println("\n-- CONSTRUCTOR | getReports | getWords --");
+
+        System.out.print("\nSocialNetworkReport snr = new MicroBlogReport();\n" + "Message.printPost(snr.getReports()) -> \n" + "for(String name : snr.getWords()) System.out.print(name + \" \") -> ");
+        try {
+            SocialNetworkReport snr = new MicroBlogReport();
+            Message.printPost(snr.getReports());
+            for(String name : snr.getWords()) System.out.print(name + " ");
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\n\nList<Post> ps = new ArrayList<Post>();\n" + "Post p1 = new Message(\"Francesco\", \"Post di Francesco, @Paolo tira le freccette\", new Timestamp(new GregorianCalendar(2016, 10, 4).getTimeInMillis()));\n" + "Post p2 =  new Message(\"Simone\", \"#LIKE_\" + p1.getId(), new Timestamp(new GregorianCalendar(2018, 07, 23).getTimeInMillis()));\n" + "ps.add(p1); ps.add(p2);\n" + "SocialNetworkReport snr = new MicroBlogReport(ps);\n" + "Message.printPost(snr.getReports()) -> ");
+        try {
+            List<Post> ps = new ArrayList<Post>();
+            Post p1 = new Message("Francesco", "Post di Francesco, @Paolo tira le freccette", new Timestamp(new GregorianCalendar(2016, 10, 4).getTimeInMillis()));
+            Post p2 =  new Message("Simone", "#LIKE_" + p1.getId(), new Timestamp(new GregorianCalendar(2018, 07, 23).getTimeInMillis()));
+            ps.add(p1); ps.add(p2);
+            SocialNetworkReport snr = new MicroBlogReport(ps);
+            Message.printPost(snr.getReports());
+            System.out.print("\nfor(String name : snr.getWords()) System.out.print(name + \" \") -> ");
+            for(String name : snr.getWords()) System.out.print(name + " ");
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.println("\n\n-- addWords --");
+
+        System.out.print("\nSocialNetworkReport snr = new MicroBlogReport();\n" + "snr.addWords(words:null) -> ");
+        try {
+            SocialNetworkReport snr = new MicroBlogReport();
+            snr.addWords(null);
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nSocialNetworkReport snr = new MicroBlogReport();\n" + "List<String> w = new ArrayList<String>();\n" + "snr.addWords(w) -> ");
+        try {
+            SocialNetworkReport snr = new MicroBlogReport();
+            List<String> w = new ArrayList<String>();
+            snr.addWords(w);
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nSocialNetworkReport snr = new MicroBlogReport();\n" + "List<String> w = new ArrayList<String>();\n" + "w.add(null);\n" + "snr.addWords(w) -> ");
+        try {
+            SocialNetworkReport snr = new MicroBlogReport();
+            List<String> w = new ArrayList<String>();
+            w.add(null);
+            snr.addWords(w);
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nSocialNetworkReport snr = new MicroBlogReport();\n" + "List<String> w = new ArrayList<String>();\n" + "w.add(\"\");\n" + "snr.addWords(w) -> ");
+        try {
+            SocialNetworkReport snr = new MicroBlogReport();
+            List<String> w = new ArrayList<String>();
+            w.add("");
+            snr.addWords(w);
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nList<Post> ps = new ArrayList<Post>();\n" + "Post p1 = new Message(\"Francesco\", \"Post di Francesco, @Paolo tira le freccette\", new Timestamp(new GregorianCalendar(2016, 10, 4).getTimeInMillis()));\n" + "Post p2 = new Message(\"Simone\", \"#LIKE_\" + p1.getId(), new Timestamp(new GregorianCalendar(2018, 07, 23).getTimeInMillis()));\n" + "Post p3 = new Message(\"Marco\", \"Il linguaggio ocaml\", new Timestamp(new GregorianCalendar(2017, 07, 24).getTimeInMillis()));\n" + "ps.add(p1); ps.add(p2); ps.add(p3);\n" + "SocialNetworkReport snr = new MicroBlogReport(ps);\n" + "Message.printPost(snr.getReports()) -> ");
+        try {
+            List<Post> ps = new ArrayList<Post>();
+            Post p1 = new Message("Francesco", "Post di Francesco, @Paolo tira le freccette", new Timestamp(new GregorianCalendar(2016, 10, 4).getTimeInMillis()));
+            Post p2 =  new Message("Simone", "#LIKE_" + p1.getId(), new Timestamp(new GregorianCalendar(2018, 07, 23).getTimeInMillis()));
+            Post p3 =  new Message("Marco", "Il linguaggio ocaml", new Timestamp(new GregorianCalendar(2017, 07, 24).getTimeInMillis()));
+            ps.add(p1); ps.add(p2); ps.add(p3);
+            SocialNetworkReport snr = new MicroBlogReport(ps);
+            Message.printPost(snr.getReports());
+            System.out.print("\nfor(String name : snr.getWords()) System.out.print(name + \" \") -> ");
+            for(String name : snr.getWords()) System.out.print(name + " ");
+            List<String> w = new ArrayList<String>(); w.add("ocaml");
+            snr.addWords(w);
+            System.out.print("\nList<String> w = new ArrayList<String>(); w.add(\"ocaml\");\n" + "snr.addWords(w);" + "\nMessage.printPost(snr.getReports()) -> ");
+            Message.printPost(snr.getReports());
+            System.out.print("\nfor(String name : snr.getWords()) System.out.print(name + \" \") -> ");
+            for(String name : snr.getWords()) System.out.print(name + " ");
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.println("\n\n-- changeWords --");
+
+        System.out.print("\nSocialNetworkReport snr = new MicroBlogReport();\n" + "snr.changeWords(words:null) -> ");
+        try {
+            SocialNetworkReport snr = new MicroBlogReport();
+            snr.changeWords(null);
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nSocialNetworkReport snr = new MicroBlogReport();\n" + "List<String> w = new ArrayList<String>();\n" + "snr.changeWords(w) -> ");
+        try {
+            SocialNetworkReport snr = new MicroBlogReport();
+            List<String> w = new ArrayList<String>();
+            snr.changeWords(w);
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nSocialNetworkReport snr = new MicroBlogReport();\n" + "List<String> w = new ArrayList<String>();\n" + "w.add(null);\n" + "snr.changeWords(w) -> ");
+        try {
+            SocialNetworkReport snr = new MicroBlogReport();
+            List<String> w = new ArrayList<String>();
+            w.add(null);
+            snr.changeWords(w);
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nSocialNetworkReport snr = new MicroBlogReport();\n" + "List<String> w = new ArrayList<String>();\n" + "w.add(\"\");\n" + "snr.changeWords(w) -> ");
+        try {
+            SocialNetworkReport snr = new MicroBlogReport();
+            List<String> w = new ArrayList<String>();
+            w.add("");
+            snr.changeWords(w);
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nList<Post> ps = new ArrayList<Post>();\n" + "Post p1 = new Message(\"Francesco\", \"Post di Francesco, @Paolo tira le freccette\", new Timestamp(new GregorianCalendar(2016, 10, 4).getTimeInMillis()));\n" + "Post p2 = new Message(\"Simone\", \"Buongiorno a tutti\", new Timestamp(new GregorianCalendar(2018, 07, 23).getTimeInMillis()));\n" + "Post p3 = new Message(\"Marco\", \"Il linguaggio ocaml\", new Timestamp(new GregorianCalendar(2017, 07, 24).getTimeInMillis()));\n" + "ps.add(p1); ps.add(p2); ps.add(p3);\n" + "SocialNetworkReport snr = new MicroBlogReport(ps);\n" + "Message.printPost(snr.getReports()) -> ");
+        try {
+            List<Post> ps = new ArrayList<Post>();
+            Post p1 = new Message("Francesco", "Post di Francesco, @Paolo tira le freccette", new Timestamp(new GregorianCalendar(2016, 10, 4).getTimeInMillis()));
+            Post p2 =  new Message("Simone", "Buongiorno a tutti", new Timestamp(new GregorianCalendar(2018, 07, 23).getTimeInMillis()));
+            Post p3 =  new Message("Marco", "Il linguaggio ocaml", new Timestamp(new GregorianCalendar(2017, 07, 24).getTimeInMillis()));
+            ps.add(p1); ps.add(p2); ps.add(p3);
+            SocialNetworkReport snr = new MicroBlogReport(ps);
+            Message.printPost(snr.getReports());
+            System.out.print("\nfor(String name : snr.getWords()) System.out.print(name + \" \") -> ");
+            for(String name : snr.getWords()) System.out.print(name + " ");
+            List<String> w = new ArrayList<String>(); w.add("ocaml"); w.add("tutti");
+            snr.changeWords(w);
+            System.out.print("\nList<String> w = new ArrayList<String>(); w.add(\"ocaml\"); w.add(\"tutti\");\n" + "snr.changeWords(w);" + "\nMessage.printPost(snr.getReports()) -> ");
+            Message.printPost(snr.getReports());
+            System.out.print("\nfor(String name : snr.getWords()) System.out.print(name + \" \") -> ");
+            for(String name : snr.getWords()) System.out.print(name + " ");
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.println("\n\n-- addPost --");
+
+        System.out.print("\nSocialNetworkReport snr = new MicroBlogReport();\n" +
+                "List<String> w = new ArrayList<String>(); w.add(\"ocaml\");\n" +
+                "snr.addWords(w);\n" +
+                "snr.addUser(\"Simone\");\n"
+                + "Message.printPost(snr.getReports()) -> ");
+        try {
+            SocialNetworkReport snr = new MicroBlogReport();
+            List<String> w = new ArrayList<String>(); w.add("ocaml");
+            snr.addWords(w);
+            snr.addUser("Simone");
+            Message.printPost(snr.getReports());
+            System.out.print("\nfor(String name : snr.getWords()) System.out.print(name + \" \") -> ");
+            for(String name : snr.getWords()) System.out.print(name + " ");
+            snr.addPost("Simone", "Linguaggio di programmazione ocaml");
+            System.out.print("\nsnr.addPost(\"Simone\", \"Linguaggio di programmazione ocaml\");" + "\nMessage.printPost(snr.getReports()) -> ");
+            Message.printPost(snr.getReports());
+            System.out.print("\nfor(String name : snr.getWords()) System.out.print(name + \" \") -> ");
+            for(String name : snr.getWords()) System.out.print(name + " ");
+        } catch(Exception e) { System.out.println(e.getMessage()); }
     }
 }

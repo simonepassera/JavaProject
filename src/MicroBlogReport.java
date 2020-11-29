@@ -17,7 +17,7 @@ public class MicroBlogReport extends MicroBlog implements SocialNetworkReport {
 
     private Set<Post> reports;
     private Set<String> words;
-    private String default_words = "Idrogeno,Interprete,Canada,Poligono,Fantasma,Freccette";
+    private String default_words = "idrogeno,interprete,canada,poligono,fantasma,freccette";
 
     // Crea un nuovo MicroBlogReport vuoto
     public MicroBlogReport()
@@ -66,10 +66,20 @@ public class MicroBlogReport extends MicroBlog implements SocialNetworkReport {
        @RETURN : reports
      */
 
+    // Restituisce la lista di parole offensive presenti nel social network usate per segnalare i post
+    public List<String> getWords()
+    {
+        return new ArrayList<String>(words);
+    }
+    /*
+       @RETURN : words
+     */
+
     // Aggiunge le parole presenti nella lista words (parametro del metodo)
     // alla lista di parole offensive, presente nel social network
     public void addWords(List<String> words) throws NullPointerException, IllegalArgumentException {
-        if(words == null || words.contains(null)) throw new NullPointerException();
+        if(words == null) throw new NullPointerException("words == null");
+        if(words.contains(null)) throw new NullPointerException("words.contains(null)");
         if(words.isEmpty()) throw new IllegalArgumentException("List is empty");
         if(words.contains("")) throw new IllegalArgumentException("List contains empty string");
 
@@ -87,7 +97,8 @@ public class MicroBlogReport extends MicroBlog implements SocialNetworkReport {
     // Sostituisce la lista di parole offensive presenti nel social network,
     // con la lista words (parametro del metodo)
     public void changeWords(List<String> words) throws NullPointerException, IllegalArgumentException {
-        if(words == null || words.contains(null)) throw new NullPointerException();
+        if(words == null) throw new NullPointerException("words == null");
+        if(words.contains(null)) throw new NullPointerException("words.contains(null)");
         if(words.isEmpty()) throw new IllegalArgumentException("List is empty");
         if(words.contains("")) throw new IllegalArgumentException("List contains empty string");
 

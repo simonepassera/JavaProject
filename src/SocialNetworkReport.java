@@ -7,7 +7,7 @@ public interface SocialNetworkReport extends SocialNetwork {
                    Un post può ricevere una segnalazione se contiene almeno una delle parole
                    giudicate offensive, all' interno del campo di testo.
                    Il social viene inizializzato di default con la lista di parole offensive
-                   default_words = [Idrogeno, Interprete, Canada, Poligono, Fantasma, Freccette]
+                   default_words = [idrogeno, interprete, canada, poligono, fantasma, freccette]
 
         Typical element : <USERS, POSTS, REPORTS, WORDS>
                           REPORTS -> insieme dei post segnalati dal social network
@@ -19,6 +19,12 @@ public interface SocialNetworkReport extends SocialNetwork {
     public List<Post> getReports();
     /*
        @RETURN : List of posts in REPORTS | for all i : 0 <= i < List.size() ==> (EXISTS string in WORDS | (List.get(i).getText() contains string))
+     */
+
+    // Restituisce la lista di parole offensive presenti nel social network usate per segnalare i post
+    public List<String> getWords();
+    /*
+       @RETURN : WORDS
      */
 
     // Aggiunge le parole presenti nella lista words (parametro del metodo)
