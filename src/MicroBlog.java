@@ -204,26 +204,17 @@ public class MicroBlog implements SocialNetwork {
         if(username.equals(follower)) throw new FollowerException("You can't follow yourself");
         if(!users.containsKey(follower)) throw new FollowerException("Follower " + follower + " not exists");
 
-        Set<String> set_following;
-
-        if(users.get(follower) == null)
-        {
-            set_following = new HashSet<String>();
-        }
-        else
-        {
-            set_following = users.get(follower);
-        }
-
+        Set<String> set_following = users.get(follower);
         set_following.add(username);
         users.put(follower, set_following);
+        followers.put(username, followers.get(username) + 1);
     }
     /*
        @REQUIRES : username != null && follower != null && users.containsKey(username) == true
                    && users.containsKey(follower) == true
        @THROWS : NullPointerException, UsernameException, FollowerException
-       @MODIFIES : users
-       @EFFECTS : users.put(follower, username)
+       @MODIFIES : users, followers
+       @EFFECTS : users.put(follower, (old_set_following.add(username))) && followers.put(username, (old_num_followers + 1))
      */
 
     // Aggiunge un post creato da username
@@ -280,15 +271,16 @@ public class MicroBlog implements SocialNetwork {
          followers.sort(Map.Entry.comparingByValue());
 
          List<String> users = new ArrayList<String>();
-         for(Map.Entry<String, Integer> entry : followers)
+
+         for(int i = followers.size() - 1; i >= 0; i--)
          {
-             users.add(entry.getKey());
+             users.add(followers.get(i).getKey());
          }
 
          return users;
     }
     /*
-       @RETURN : followers.keySet() order by values
+       @RETURN : followers.keySet() order by values (descending order)
      */
 
     // Restituisce l’insieme degli utenti menzionati (inclusi) nei post presenti nella rete sociale

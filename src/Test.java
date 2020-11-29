@@ -217,5 +217,19 @@ public class Test {
             sn.addUser("Paolo");
             sn.addPost("Simone", "Testo del post di simone dove menziono @Paolo");
         } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.println("\n-- influencers --");
+
+        System.out.print("\nSocialNetwork sn = new MicroBlog();\n" + "sn.addUser(\"Aldo58\");\n" + "sn.addUser(\"Giovanni3\");\n" + "sn.addUser(\"Giacomo\");\n" + "sn.addFollower(\"Aldo58\", \"Giovanni3\");\n" + "sn.addFollower(\"Aldo58\", \"Giacomo\");\n" + "sn.addFollower(\"Giacomo\", \"Aldo58\");\n" + "for(String name : sn.influencers()) System.out.print(name + \" \") -> ");
+        try {
+            SocialNetwork sn = new MicroBlog();
+            sn.addUser("Aldo58");
+            sn.addUser("Giovanni3");
+            sn.addUser("Giacomo");
+            sn.addFollower("Aldo58", "Giovanni3");
+            sn.addFollower("Aldo58", "Giacomo");
+            sn.addFollower("Giacomo", "Aldo58");
+            for(String name : sn.influencers()) System.out.print(name + " ");
+        } catch(Exception e) { System.out.println(e.getMessage()); }
     }
 }
