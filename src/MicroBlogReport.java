@@ -114,7 +114,7 @@ public class MicroBlogReport extends MicroBlog implements SocialNetworkReport {
     @Override
     // Aggiunge un post creato da username, e se il testo del post contiene
     // almeno una parola offensiva, il post viene segnalato dal social network
-    public void addPost(String username, String text) throws NullPointerException, UsernameException, LikeException, MentionException, PostException {
+    public Integer addPost(String username, String text) throws NullPointerException, UsernameException, LikeException, MentionException, PostException {
         if(username == null || text == null) throw new NullPointerException();
         if(!users.containsKey(username)) throw new UsernameException("Username " + username + " not exists");
         if(text.isEmpty()) throw new PostException("The text of " + username + " is empty");
@@ -140,8 +140,8 @@ public class MicroBlogReport extends MicroBlog implements SocialNetworkReport {
                 u = m.group(1);
                 mentioned.add(u);
 
-                if(!users.containsKey(u)) throw new MentionException("Username mentioned" + u + "not exists");
-                if(!users.get(username).contains(u)) throw new MentionException("You can't mention" + u);
+                if(!users.containsKey(u)) throw new MentionException("Username mentioned " + u + " not exists");
+                if(!users.get(username).contains(u)) throw new MentionException("You can't mention " + u);
             }
 
             this.mentioned.addAll(mentioned);
@@ -160,11 +160,14 @@ public class MicroBlogReport extends MicroBlog implements SocialNetworkReport {
         Matcher words_list = Pattern.compile(regex.deleteCharAt(regex.length()-1).toString()).matcher(text);
 
         if(words_list.find()) reports.add(post);
+
+        return post.getId();
     }
     /*
        @REQUIRES : username != null && text != null && users.containsKey(username) == true
        @THROWS : NullPointerException, UsernameException, LikeException, MentionException, PostException
        @MODIFIES : feed, mentioned, reports
        @EFFECTS : feed.put(new_post.getId(), new_post) && (reports.add(post) if EXISTS string in words | (post.getText() contains string))
+       @RETURN : new_post.getId()
      */
 }

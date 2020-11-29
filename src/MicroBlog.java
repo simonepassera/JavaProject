@@ -184,7 +184,7 @@ public class MicroBlog implements SocialNetwork {
         if(users.containsKey(username)) throw new UsernameException("Username " + username + " already exists");
         if(!username.matches("[a-zA-Z_0-9]{5,15}")) throw new UsernameException("Username " + username + " illegal format");
 
-        users.put(username, null);
+        users.put(username, new HashSet<String>());
         followers.put(username, 0);
 
         return username;
@@ -193,7 +193,7 @@ public class MicroBlog implements SocialNetwork {
        @REQUIRES : username != null && users.containsKey(username) == false
        @THROWS : NullPointerException, UsernameException
        @MODIFIES : users, followers
-       @EFFECTS : users.put(username, null) && followers.put(username, 0)
+       @EFFECTS : users.put(username, new HashSet<String>()) && followers.put(username, 0)
        @RETURN : username
      */
 
@@ -227,7 +227,7 @@ public class MicroBlog implements SocialNetwork {
      */
 
     // Aggiunge un post creato da username
-    public void addPost(String username, String text) throws NullPointerException, UsernameException, LikeException, MentionException, PostException {
+    public Integer addPost(String username, String text) throws NullPointerException, UsernameException, LikeException, MentionException, PostException {
         if(username == null || text == null) throw new NullPointerException("One or more parameters are null");
         if(!users.containsKey(username)) throw new UsernameException("Username " + username + " not exists");
         if(text.isEmpty()) throw new PostException("The text of " + username + " is empty");
@@ -239,7 +239,7 @@ public class MicroBlog implements SocialNetwork {
 
             if(!feed.containsKey(id)) throw new LikeException("Post " + id + " not exists");
             if(feed.get(id).getText().matches("#LIKE_[0-9]+")) throw new LikeException("Post " + id + " is a like");
-            if(!users.get(username).contains(feed.get(id).getAuthor())) throw new LikeException("You can't like " + id);
+            if(!users.get(username).contains(feed.get(id).getAuthor())) throw new LikeException("You can't like post " + id);
         }
         else
         {
@@ -253,8 +253,8 @@ public class MicroBlog implements SocialNetwork {
                 u = m.group(1);
                 mentioned.add(u);
 
-                if(!users.containsKey(u)) throw new MentionException("Username mentioned" + u + "not exists");
-                if(!users.get(username).contains(u)) throw new MentionException("You can't mention" + u);
+                if(!users.containsKey(u)) throw new MentionException("Username mentioned " + u + " not exists");
+                if(!users.get(username).contains(u)) throw new MentionException("You can't mention " + u);
             }
 
             this.mentioned.addAll(mentioned);
@@ -262,12 +262,15 @@ public class MicroBlog implements SocialNetwork {
 
         Post post = new Message(username, text, new Timestamp(System.currentTimeMillis()));
         feed.put(post.getId(), post);
+
+        return post.getId();
     }
     /*
        @REQUIRES : username != null && text != null && users.containsKey(username) == true
        @THROWS : NullPointerException, UsernameException, LikeException, MentionException, PostException
        @MODIFIES : feed, mentioned
        @EFFECTS : feed.put(new_post.getId(), new_post)
+       @RETURN : new_post.getId()
      */
 
     // Restituisce gli utenti più influenti delle rete sociale, ovvero quelli che hanno

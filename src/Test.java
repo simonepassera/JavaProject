@@ -182,5 +182,40 @@ public class Test {
             sn.addUser("Simone");
             sn.addPost("Simone", "#LIKE_32");
         } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nSocialNetwork sn = new MicroBlog();\n" + "sn.addUser(\"Simone\");\n" + "sn.addUser(\"Paolo\");\n" + "Integer id_s = sn.addPost(\"Simone\", \"Testo del post di simone (id_s = 8)\");\n" + "sn.addPost(username:\"Paolo\", text:\"#LIKE_\" + id_s) -> ");
+        try {
+            SocialNetwork sn = new MicroBlog();
+            sn.addUser("Simone");
+            sn.addUser("Paolo");
+            Integer id_s = sn.addPost("Simone", "Testo del post di simone (id_s = 8)");
+            sn.addPost("Paolo", "#LIKE_" + id_s);
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nSocialNetwork sn = new MicroBlog();\n" + "sn.addUser(\"Simone\");\n" + "sn.addUser(\"Paolo\");\n" + "sn.addFollower(\"Simone\", \"Paolo\");\n" + "Integer id_s = sn.addPost(\"Simone\", \"Testo del post di simone\");\n" + "Integer id_like = sn.addPost(\"Paolo\", \"#LIKE_\" + id_s);\n" + "sn.addPost(username:\"Simone\", text:\"#LIKE_\" + id_like) -> ");
+        try {
+            SocialNetwork sn = new MicroBlog();
+            sn.addUser("Simone");
+            sn.addUser("Paolo");
+            sn.addFollower("Simone", "Paolo");
+            Integer id_s = sn.addPost("Simone", "Testo del post di simone");
+            Integer id_like = sn.addPost("Paolo", "#LIKE_" + id_s);
+            sn.addPost("Simone", "#LIKE_" + id_like);
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nSocialNetwork sn = new MicroBlog();\n" + "sn.addUser(\"Simone\");\n" + "sn.addPost(username:\"Simone\", text:\"Testo del post di simone dove menziono @Paolo\") -> ");
+        try {
+            SocialNetwork sn = new MicroBlog();
+            sn.addUser("Simone");
+            sn.addPost("Simone", "Testo del post di simone dove menziono @Paolo");
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nSocialNetwork sn = new MicroBlog();\n" + "sn.addUser(\"Simone\");\n" + "sn.addUser(\"Paolo\");\n" + "sn.addPost(username:\"Simone\", text:\"Testo del post di simone dove menziono @Paolo\") -> ");
+        try {
+            SocialNetwork sn = new MicroBlog();
+            sn.addUser("Simone");
+            sn.addUser("Paolo");
+            sn.addPost("Simone", "Testo del post di simone dove menziono @Paolo");
+        } catch(Exception e) { System.out.println(e.getMessage()); }
     }
 }
