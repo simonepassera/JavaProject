@@ -1,4 +1,5 @@
 import java.sql.Timestamp;
+import java.util.List;
 
 public class Message implements Post {
     /*
@@ -62,4 +63,16 @@ public class Message implements Post {
         return (Timestamp) timestamp.clone();
     }
     // @RETURN : timestamp
+
+    // ********************
+    // *** TEST METHODS ***
+    // ********************
+
+    public static void printPost(List<Post> ps)
+    {
+        for(Post p : ps)
+        {
+            System.out.print("<" + p.getId() + "; " + p.getAuthor() + "; " + p.getText() + "; " + p.getTimestamp().toString() + "> ");
+        }
+    }
 }

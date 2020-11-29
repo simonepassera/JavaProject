@@ -294,7 +294,7 @@ public class MicroBlog implements SocialNetwork {
     // Restituisce la lista dei post effettuati dall’utente nella rete sociale
     // il cui nome è dato dal parametro username
     public List<Post> writtenBy(String username) throws NullPointerException, UsernameException {
-        if(username == null) throw new NullPointerException();
+        if(username == null) throw new NullPointerException("username == null");
         if(!users.containsKey(username)) throw new UsernameException("Username " + username + " not exists");
 
         List<Post> messages = new ArrayList<Post>();
@@ -318,7 +318,8 @@ public class MicroBlog implements SocialNetwork {
     // Restituisce la lista dei post presenti nella rete sociale che includono
     // almeno una delle parole presenti nella lista delle parole argomento del metodo
     public List<Post> containing(List<String> words) throws NullPointerException, IllegalArgumentException {
-        if(words == null || words.contains(null)) throw new NullPointerException();
+        if(words == null) throw new NullPointerException("words == null");
+        if(words.contains(null)) throw new NullPointerException("words.contains(null)");
         if(words.isEmpty()) throw new IllegalArgumentException("List is empty");
         if(words.contains("")) throw new IllegalArgumentException("List contains empty string");
 
@@ -354,7 +355,8 @@ public class MicroBlog implements SocialNetwork {
     // Restituisce la rete sociale derivata dalla lista di post (parametro del metodo),
     // analizzando i mi piace e le persone menzionate
     public static Map<String, Set<String>> guessFollowers(List<Post> ps) throws NullPointerException, IllegalArgumentException {
-        if(ps == null || ps.contains(null)) throw new NullPointerException();
+        if(ps == null) throw new NullPointerException("ps == null");
+        if(ps.contains(null)) throw new NullPointerException("ps.contains(null)");
         if(ps.isEmpty()) throw new IllegalArgumentException("List is empty");
 
         Map<String, Set<String>> network = new HashMap<String, Set<String>>();
@@ -458,7 +460,8 @@ public class MicroBlog implements SocialNetwork {
 
     // Restituisce l’insieme degli utenti menzionati (inclusi) nella lista di post
     public static Set<String> getMentionedUsers(List<Post> ps) throws NullPointerException, IllegalArgumentException {
-        if(ps == null || ps.contains(null)) throw new NullPointerException();
+        if(ps == null) throw new NullPointerException("ps == null");
+        if(ps.contains(null)) throw new NullPointerException("ps.contains(null)");
         if(ps.isEmpty()) throw new IllegalArgumentException("List is empty");
 
         Set<String> users = new HashSet<String>();
@@ -486,7 +489,9 @@ public class MicroBlog implements SocialNetwork {
     // Restituisce la lista dei post effettuati dall’utente
     // il cui nome è dato dal parametro username presenti nella lista ps
     public static List<Post> writtenBy(List<Post> ps, String username) throws NullPointerException, UsernameException, IllegalArgumentException {
-        if(ps == null || ps.contains(null) || username == null) throw new NullPointerException();
+        if(ps == null) throw new NullPointerException("ps == null");
+        if(ps.contains(null)) throw new NullPointerException("ps.contains(null)");
+        if(username == null) throw new NullPointerException("username == null");
         if(ps.isEmpty()) throw new IllegalArgumentException("List is empty");
         if(!username.matches("[a-zA-Z_0-9]{5,15}")) throw new UsernameException("Username " + username + " illegal format");
 
@@ -512,4 +517,29 @@ public class MicroBlog implements SocialNetwork {
     // ********************
     // *** TEST METHODS ***
     // ********************
+
+    public static void printNetwork(Map<String, Set<String>> nw)
+    {
+        for(Map.Entry<String, Set<String>> entry : nw.entrySet())
+        {
+            System.out.print("[" + entry.getKey() + " | <");
+
+            boolean b = true;
+
+            for(String following : entry.getValue())
+            {
+                if(b)
+                {
+                    System.out.print(following);
+                    b = false;
+                }
+                else
+                {
+                    System.out.print("," + following);
+                }
+            }
+
+            System.out.print(">] ");
+        }
+    }
 }

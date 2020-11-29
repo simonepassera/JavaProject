@@ -245,5 +245,172 @@ public class Test {
             sn.addPost("Simone", "Testo del post di simone dove menziono @Giacomo e @Francesco");
             for(String name : sn.getMentionedUsers()) System.out.print(name + " ");
         } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.println("\n\n-- writtenBy --");
+
+        System.out.print("\nSocialNetwork sn = new MicroBlog();\n" + "sn.writtenBy(username:null) -> ");
+        try {
+            SocialNetwork sn = new MicroBlog();
+            sn.writtenBy(null);
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nSocialNetwork sn = new MicroBlog();\n" + "sn.writtenBy(username:\"Simone\") -> ");
+        try {
+            SocialNetwork sn = new MicroBlog();
+            sn.writtenBy("Simone");
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nSocialNetwork sn = new MicroBlog();\n" + "sn.addUser(\"Simone\");\n" + "sn.addPost(\"Simone\", \"Testo1 del post di simone\");\n" + "sn.addPost(\"Simone\", \"Testo2 del post di simone\");\n" + "Message.printPost(sn.writtenBy(username:\"Simone\")) -> ");
+        try {
+            SocialNetwork sn = new MicroBlog();
+            sn.addUser("Simone");
+            sn.addPost("Simone", "Testo1 del post di simone");
+            sn.addPost("Simone", "Testo2 del post di simone");
+            Message.printPost(sn.writtenBy("Simone"));
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.println("\n\n-- containing --");
+
+        System.out.print("\nSocialNetwork sn = new MicroBlog();\n" + "sn.containing(words:null) -> ");
+        try {
+            SocialNetwork sn = new MicroBlog();
+            sn.containing(null);
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nSocialNetwork sn = new MicroBlog();\n" + "List<String> w = new ArrayList<String>();\n" + "sn.containing(w) -> ");
+        try {
+            SocialNetwork sn = new MicroBlog();
+            List<String> w = new ArrayList<String>();
+            sn.containing(w);
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nSocialNetwork sn = new MicroBlog();\n" + "List<String> w = new ArrayList<String>();\n" + "w.add(null);\n" + "sn.containing(w) -> ");
+        try {
+            SocialNetwork sn = new MicroBlog();
+            List<String> w = new ArrayList<String>();
+            w.add(null);
+            sn.containing(w);
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nSocialNetwork sn = new MicroBlog();\n" + "List<String> w = new ArrayList<String>();\n" + "w.add(\"\");\n" + "sn.containing(w) -> ");
+        try {
+            SocialNetwork sn = new MicroBlog();
+            List<String> w = new ArrayList<String>();
+            w.add("");
+            sn.containing(w);
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nSocialNetwork sn = new MicroBlog();\n" + "sn.addUser(\"Simone\");\n" + "sn.addUser(\"Francesco\");\n" + "sn.addPost(\"Simone\", \"Testo del post di simone, gelato\");\n" + "sn.addPost(\"Francesco\", \"Testo del post di francesco\");\n" + "List<String> w = new ArrayList<String>(); w.add(\"gelato\"); w.add(\"francesco\");\n" + "Message.printPost(sn.containing(w)) -> ");
+        try {
+            SocialNetwork sn = new MicroBlog();
+            sn.addUser("Simone");
+            sn.addUser("Francesco");
+            sn.addPost("Simone", "Testo del post di simone, gelato");
+            sn.addPost("Francesco", "Testo del post di francesco");
+            List<String> w = new ArrayList<String>(); w.add("gelato"); w.add("francesco");
+            Message.printPost(sn.containing(w));
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.println("\n\n-- STATIC guessFollowers --");
+
+        System.out.print("\nMicroBlog.guessFollowers(ps:null) -> ");
+        try {
+            MicroBlog.guessFollowers(null);
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nList<Post> ps = new ArrayList<Post>();\n" + "MicroBlog.guessFollowers(ps) -> ");
+        try {
+            List<Post> ps = new ArrayList<Post>();
+            MicroBlog.guessFollowers(ps);
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nList<Post> ps = new ArrayList<Post>();\n" + "ps.add(null);\n" + "MicroBlog.guessFollowers(ps) -> ");
+        try {
+            List<Post> ps = new ArrayList<Post>();
+            ps.add(null);
+            MicroBlog.guessFollowers(ps);
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nList<Post> ps = new ArrayList<Post>();\n" + "Post p1 = new Message(\"Francesco\", \"Testo del post di francesco, menziono @Paolo\", new Timestamp(new GregorianCalendar(2016, 10, 4).getTimeInMillis()));\n" + "Post p2 =  new Message(\"Simone\", \"#LIKE_\" + p1.getId(), new Timestamp(new GregorianCalendar(2018, 07, 23).getTimeInMillis()));\n" + "ps.add(p1); ps.add(p2);\n" + "MicroBlog.printNetwork(MicroBlog.guessFollowers(ps)) -> ");
+        try {
+            List<Post> ps = new ArrayList<Post>();
+            Post p1 = new Message("Francesco", "Testo del post di francesco, menziono @Paolo", new Timestamp(new GregorianCalendar(2016, 10, 4).getTimeInMillis()));
+            Post p2 =  new Message("Simone", "#LIKE_" + p1.getId(), new Timestamp(new GregorianCalendar(2018, 07, 23).getTimeInMillis()));
+            ps.add(p1); ps.add(p2);
+            MicroBlog.printNetwork(MicroBlog.guessFollowers(ps));
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.println("\n\n-- STATIC getMentionedUsers --");
+
+        System.out.print("\nMicroBlog.getMentionedUsers(ps:null) -> ");
+        try {
+            MicroBlog.getMentionedUsers(null);
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nList<Post> ps = new ArrayList<Post>();\n" + "MicroBlog.getMentionedUsers(ps) -> ");
+        try {
+            List<Post> ps = new ArrayList<Post>();
+            MicroBlog.getMentionedUsers(ps);
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nList<Post> ps = new ArrayList<Post>();\n" + "ps.add(null);\n" + "MicroBlog.getMentionedUsers(ps) -> ");
+        try {
+            List<Post> ps = new ArrayList<Post>();
+            ps.add(null);
+            MicroBlog.getMentionedUsers(ps);
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nList<Post> ps = new ArrayList<Post>();\n" + "Post p1 = new Message(\"Francesco\", \"Menziono @Francesco, ciao @Paolo e nome corto @Luca\", new Timestamp(new GregorianCalendar(2016, 10, 4).getTimeInMillis()));\n" + "Post p2 =  new Message(\"Simone\", \"#LIKE_\" + p1.getId(), new Timestamp(new GregorianCalendar(2018, 07, 23).getTimeInMillis()));\n" + "ps.add(p1); ps.add(p2);\n" + "for(String name : MicroBlog.getMentionedUsers(ps)) System.out.print(name + \" \") -> ");
+        try {
+            List<Post> ps = new ArrayList<Post>();
+            Post p1 = new Message("Francesco", "Menziono @Francesco, ciao @Paolo e nome corto @Luca", new Timestamp(new GregorianCalendar(2016, 10, 4).getTimeInMillis()));
+            Post p2 =  new Message("Simone", "#LIKE_" + p1.getId(), new Timestamp(new GregorianCalendar(2018, 07, 23).getTimeInMillis()));
+            ps.add(p1); ps.add(p2);
+            for(String name : MicroBlog.getMentionedUsers(ps)) System.out.print(name + " ");
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.println("\n\n-- STATIC writtenBy --");
+
+        System.out.print("\nMicroBlog.writtenBy(ps:null, username:\"Simone\") -> ");
+        try {
+            MicroBlog.writtenBy(null, "Simone");
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nList<Post> ps = new ArrayList<Post>();\n" + "MicroBlog.writtenBy(ps, username:null) -> ");
+        try {
+            List<Post> ps = new ArrayList<Post>();
+            MicroBlog.writtenBy(ps, null);
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nList<Post> ps = new ArrayList<Post>();\n" + "ps.add(null);\n" + "MicroBlog.writtenBy(ps, username:\"Simone\") -> ");
+        try {
+            List<Post> ps = new ArrayList<Post>();
+            ps.add(null);
+            MicroBlog.writtenBy(ps, "Simone");
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nList<Post> ps = new ArrayList<Post>();\n" + "MicroBlog.writtenBy(ps, username:\"Simone\") -> ");
+        try {
+            List<Post> ps = new ArrayList<Post>();
+            MicroBlog.writtenBy(ps, "Simone");
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nList<Post> ps = new ArrayList<Post>();\n" + "Post p1 = new Message(\"Simone\", \"Testo del post di Simone\", new Timestamp(new GregorianCalendar(2012, 05, 23).getTimeInMillis()));\n" + "ps.add(p1);\n" + "MicroBlog.writtenBy(ps, username:\"S!mone?\") -> ");
+        try {
+            List<Post> ps = new ArrayList<Post>();
+            Post p1 = new Message("Simone", "Testo del post di Simone", new Timestamp(new GregorianCalendar(2012, 05, 23).getTimeInMillis()));
+            ps.add(p1);
+            MicroBlog.writtenBy(ps, "S!mone?");
+        } catch(Exception e) { System.out.println(e.getMessage()); }
+
+        System.out.print("\nList<Post> ps = new ArrayList<Post>();\n" + "Post p1 = new Message(\"Francesco\", \"Testo del post di francesco\", new Timestamp(new GregorianCalendar(2016, 10, 4).getTimeInMillis()));\n" + "Post p2 = new Message(\"Simone\", \"Testo del post di Simone\", new Timestamp(new GregorianCalendar(2015, 05, 4).getTimeInMillis()));\n" + "Post p3 = new Message(\"Simone\", \"Like_44\", new Timestamp(new GregorianCalendar(2013, 06, 14).getTimeInMillis()));\n" + "ps.add(p1); ps.add(p2); ps.add(p3);\n" + "Message.printPost(MicroBlog.writtenBy(ps, username:\"Simone\")) -> ");
+        try {
+            List<Post> ps = new ArrayList<Post>();
+            Post p1 = new Message("Francesco", "Testo del post di francesco", new Timestamp(new GregorianCalendar(2016, 10, 4).getTimeInMillis()));
+            Post p2 = new Message("Simone", "Testo del post di Simone", new Timestamp(new GregorianCalendar(2015, 05, 4).getTimeInMillis()));
+            Post p3 = new Message("Simone", "#LIKE_44", new Timestamp(new GregorianCalendar(2013, 06, 14).getTimeInMillis()));
+            ps.add(p1); ps.add(p2); ps.add(p3);
+            Message.printPost(MicroBlog.writtenBy(ps, "Simone"));
+        } catch(Exception e) { System.out.println(e.getMessage()); }
     }
 }
