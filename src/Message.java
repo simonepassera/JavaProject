@@ -68,6 +68,7 @@ public class Message implements Post {
     // *** TEST METHODS ***
     // ********************
 
+    // Stampa <id; author; text; timestamp> per ogni post in ps
     public static void printPost(List<Post> ps)
     {
         for(Post p : ps)

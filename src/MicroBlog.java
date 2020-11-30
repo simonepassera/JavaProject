@@ -49,10 +49,10 @@ public class MicroBlog implements SocialNetwork {
         if(ps.contains(null)) throw new NullPointerException("ps.contains(null)");
         if(ps.isEmpty()) throw new IllegalArgumentException("List is empty");
 
-        Timestamp current_time = new Timestamp(System.currentTimeMillis());
+        Timestamp current_time = new Timestamp(System.currentTimeMillis()); // Salvo data e ora corrente
 
-        Map<String, Set<Post>> like = new HashMap<String, Set<Post>>();
-        Map<Integer, Post> messages = new HashMap<Integer, Post>();
+        Map<String, Set<Post>> like = new HashMap<String, Set<Post>>(); // Contiene l' associazione <utente, insieme dei mi piace>
+        Map<Integer, Post> messages = new HashMap<Integer, Post>(); // Contiene i post che non sono mi piace
 
         Pattern mention = Pattern.compile("@([a-zA-Z_0-9]{5,15})");
         Matcher m = mention.matcher("");
@@ -95,7 +95,7 @@ public class MicroBlog implements SocialNetwork {
 
                     while(m.find())
                     {
-                        if(m.group(1).equals(author)) throw new MentionException("Illegal mention");
+                        if(m.group(1).equals(author)) throw new MentionException("Illegal mention"); // Non è possibile menzionarsi da soli
                         set_mentioned.add(m.group(1));
                     }
 
@@ -109,8 +109,8 @@ public class MicroBlog implements SocialNetwork {
                     }
                     else
                     {
-                        this.users.put(author, set_mentioned);
-                    }
+                        this.users.put(author, set_mentioned); // Inserisco i menzionati nell' insieme
+                    }                                          // delle persone seguite da author
                 }
 
                 feed.put(post.getId(), post);
@@ -139,13 +139,13 @@ public class MicroBlog implements SocialNetwork {
                 }
 
                 set_following.add(messages.get(id).getAuthor());
-                this.users.put(entry.getKey(), set_following);
-            }
+                this.users.put(entry.getKey(), set_following); // Inserisco nell' insieme delle persone seguite dall'
+            }                                                  // autore dei mi piace, gli utenti a cui l' autore a messo mi piace
         }
 
         Integer num;
 
-        for(Map.Entry<String, Set<String>> entry : this.users.entrySet())
+        for(Map.Entry<String, Set<String>> entry : this.users.entrySet())   // Ad ogni utente viene assegnato il numero di followers
         {
             for(String followed : entry.getValue())
             {
@@ -184,8 +184,8 @@ public class MicroBlog implements SocialNetwork {
         if(users.containsKey(username)) throw new UsernameException("Username " + username + " already exists");
         if(!username.matches("[a-zA-Z_0-9]{5,15}")) throw new UsernameException("Username " + username + " illegal format");
 
-        users.put(username, new HashSet<String>());
-        followers.put(username, 0);
+        users.put(username, new HashSet<String>()); // Aggiungo un nuovo utente e l' insieme delle persone da lui seguite è vuoto
+        followers.put(username, 0); // Il numero di followers di un nuovo utente nuovo è zero
 
         return username;
     }
@@ -206,8 +206,8 @@ public class MicroBlog implements SocialNetwork {
 
         Set<String> set_following = users.get(follower);
         set_following.add(username);
-        users.put(follower, set_following);
-        followers.put(username, followers.get(username) + 1);
+        users.put(follower, set_following); // Aggiungo alla lista delle persone seguite da follower, username
+        followers.put(username, followers.get(username) + 1); // Aggiungo un follower ad username
     }
     /*
        @REQUIRES : username != null && follower != null && users.containsKey(username) == true
@@ -226,7 +226,7 @@ public class MicroBlog implements SocialNetwork {
 
         if(text.matches("#LIKE_[0-9]+"))
         {
-            int id = Integer.parseInt(text.substring(6));
+            int id = Integer.parseInt(text.substring(6)); // id del post a cui si vuole mettere mi piace
 
             if(!feed.containsKey(id)) throw new LikeException("Post " + id + " not exists");
             if(feed.get(id).getText().matches("#LIKE_[0-9]+")) throw new LikeException("Post " + id + " is a like");
@@ -268,7 +268,7 @@ public class MicroBlog implements SocialNetwork {
     // un numero maggiore di “follower”
     public List<String> influencers() {
          List<Map.Entry<String, Integer>> followers = new ArrayList<Map.Entry<String, Integer>>(this.followers.entrySet());
-         followers.sort(Map.Entry.comparingByValue());
+         followers.sort(Map.Entry.comparingByValue()); // Ordino la lista rispetto al numero di followers
 
          List<String> users = new ArrayList<String>();
 
@@ -328,12 +328,12 @@ public class MicroBlog implements SocialNetwork {
 
         for(String w : words)
         {
-            regex.append(w).append("|");
+            regex.append(w).append("|"); // Costruisco un' unica stringa con tutte le parole separate da |
         }
 
         Matcher words_list = Pattern.compile(regex.deleteCharAt(regex.length()-1).toString()).matcher("");
 
-        for(Map.Entry<Integer, Post> entry : feed.entrySet())
+        for(Map.Entry<Integer, Post> entry : feed.entrySet()) // Controllo il testo di tutti i post e se c'è un match, il post va nel risultato
         {
             words_list.reset(entry.getValue().getText());
             if(words_list.find()) messages.add(entry.getValue());
@@ -472,7 +472,7 @@ public class MicroBlog implements SocialNetwork {
         {
             m.reset(post.getText());
 
-            while(m.find())
+            while(m.find()) // Cerco un utente menzionato
             {
                 users.add(m.group(1));
             }
@@ -499,7 +499,7 @@ public class MicroBlog implements SocialNetwork {
 
         for(Post post : ps)
         {
-            if(post.getAuthor().equals(username))
+            if(post.getAuthor().equals(username)) // Controllo se il post è stato scritto da username
             {
                 messages.add(post);
             }
@@ -518,6 +518,7 @@ public class MicroBlog implements SocialNetwork {
     // *** TEST METHODS ***
     // ********************
 
+    // Stampa tutti gli elementi della mappa nw : [utente1 | <utente2_seguito_da_utente1, utente3_seguito_da_utente1, ...>] ...
     public static void printNetwork(Map<String, Set<String>> nw)
     {
         for(Map.Entry<String, Set<String>> entry : nw.entrySet())
