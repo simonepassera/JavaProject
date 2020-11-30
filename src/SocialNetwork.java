@@ -2,20 +2,12 @@ import java.util.*;
 
 public interface SocialNetwork {
     /*
-        Overview : Tipo modificabile di una componente software che gestisce e analizza
-                   la rete sociale MicroBlog. Una persona nella rete sociale è rappresentata e
-                   identificata in modo univoco dal nome. Il nome utente è compreso tra 5 e 15 caratteri,
-                   può contenere caratteri maiuscoli, minuscoli, numeri e sottolineato.
-                   Gli utenti della rete sociale non possono seguire se stessi ed ognuno può seguire un numero indefinito
-                   di utenti. Un utente può mettere un mi piace ad un post oppure menzionare un utente, solo se
-                   segue il creatore del post o l' utente menzionato. Per possibile menzionare altri utenti, appartenenti alla
-                   rete sociale, in un post, con l' uso del simbolo (@) ad es @Nome1 @Nome2 ...
-                   Quando un utente mette un mi piace ad un post, viene codificato all' interno della rete sociale
-                   con un post in cui il campo di testo è formato da "#LIKE_id" dove id è l' identificatore univoco del post.
+        Overview : Tipo modificabile della componente software che gestisce e analizza
+                   la rete sociale MicroBlog.
 
         Typical element : <USERS, POSTS>
                           USERS -> insieme di coppie <utente, insieme delle persone da lui seguite>
-                          POSTS -> insieme di post <id, utente, testo, timestamp>
+                          POSTS -> insieme di Post <id, utente, testo, data e ora di pubblicazione>
      */
 
     // Crea un nuovo utente nella rete sociale, restituisce il proprio username

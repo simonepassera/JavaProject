@@ -5,9 +5,9 @@ import java.util.regex.*;
 public class MicroBlog implements SocialNetwork {
     /*
         Representation Invariant : users != null && for all keys in users ==> ((key != null) && (key.matches("[a-zA-Z_0-9]{5,15}") == true))
-                                   && users.keySet().equals(followers.keySet()) && for all keys of users ==> (users.get(key).contains(key) == false)
-                                   && followers != null && for all keys of followers ==> (followers.get(key) >= 0)
-                                   && feed != null && for all keys of feed ==> (feed.get(key).getId().equals(key) == true)
+                                   && users.keySet().equals(followers.keySet()) && for all keys in users ==> (users.get(key).contains(key) == false)
+                                   && followers != null && for all keys in followers ==> (followers.get(key) >= 0)
+                                   && feed != null && for all keys in feed ==> (feed.get(key).getId().equals(key) == true)
                                    && for all keys in feed ==>
                                         (feed.get(key).getText.matches("#LIKE_[0-9]+") ==>
                                           ((feed.containsKey(Integer.parseInt("[0-9]+")) == true) && (feed.get(Integer.parseInt("[0-9]+")).getText().matches("#LIKE_[0-9]+") == false)
@@ -20,7 +20,7 @@ public class MicroBlog implements SocialNetwork {
         Abstraction function : AF(users) = Insieme di coppie <utente, insieme delle persone da lui seguite>
                                AF(followers) = Insieme di coppie <utente, numero di followers>
                                AF(feed) = Insieme di coppie <id, post> dove post.getId() == id
-                               AF(mentioned) = Sottoinsieme di utenti, che sono stati menzionati nei post
+                               AF(mentioned) = Sottoinsieme di utenti, che sono stati menzionati in tutti i post
      */
 
     protected Map<String, Set<String>> users;

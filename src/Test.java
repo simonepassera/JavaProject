@@ -540,11 +540,7 @@ public class Test {
 
         System.out.println("\n\n-- addPost --");
 
-        System.out.print("\nSocialNetworkReport snr = new MicroBlogReport();\n" +
-                "List<String> w = new ArrayList<String>(); w.add(\"ocaml\");\n" +
-                "snr.addWords(w);\n" +
-                "snr.addUser(\"Simone\");\n"
-                + "Message.printPost(snr.getReports()) -> ");
+        System.out.print("\nSocialNetworkReport snr = new MicroBlogReport();\n" + "List<String> w = new ArrayList<String>(); w.add(\"ocaml\");\n" + "snr.addWords(w);\n" + "snr.addUser(\"Simone\");\n" + "Message.printPost(snr.getReports()) -> ");
         try {
             SocialNetworkReport snr = new MicroBlogReport();
             List<String> w = new ArrayList<String>(); w.add("ocaml");
